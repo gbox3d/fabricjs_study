@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="../libs/fabric.js" ></script>
+</head>
+<body>
+
+<canvas id="main-canvas" width="256" height="256"  ></canvas>
+
+<div id="property">
+  <div> x:<input name="xpos">, y:<input name="ypos">, <input name="angle" ></div>
+  <div> sx : <input name="scale_x" >,sy : <input name="scale_y" > </div>
+</div>
+
+<button id="btn-test" > test </button>
+<button id="btn-discard" > discard </button>
+
+<script>
+
+  function updateToForm() {
+
+    let _root = document.querySelector('#property')
+
+    // 현재 선택된 오브잭트 얻기
+    let _selObj = canvas.getActiveObject();
+
+    _root.querySelector('input[name=xpos]').value = _selObj.get("left")
+    _root.querySelector('input[name=ypos]').value = _selObj.get("top")
+
+  }
+
+  var canvas =  new fabric.Canvas('main-canvas', {
+    backgroundColor : '#000000',
+    preserveObjectStacking : true //선택한 오브잭트 현재 z 순서  유지
+  })
+
+  // create a rectangle object
+  var rect = new fabric.Rect({
+    left: 100,
+    top: 100,
+    fill: '#ff0000',
+    width: 64,
+    height: 64
+  });
+
+  var circle = new fabric.Circle({
+    radius: 20, fill: 'green', left: 100, top: 100
+  });
+  var triangle = new fabric.Triangle({
+    width: 20, height: 30, fill: 'blue', left: 50, top: 50
+  });
+
+  // "add" rectangle onto canvas
+  canvas.add(rect);
+  canvas.add(circle);
+  canvas.add(triangle);
+
+  canvas.on('selection:created',function (evt) {
+    console.log('selection:created',evt);
+    updateToForm()
+  })
+
+  canvas.on('selection:updated',function (evt) {
+    console.log('selection:updated',evt);
+    updateToForm()
+  })
+
+  canvas.on('object:moving',(evt)=> {
+    console.log(evt)
+    updateToForm()
+  })
+
+  canvas.on('object:rotating',(evt)=> {
+    console.log(evt)
+    updateToForm()
+  })
+
+  document.querySelector('#btn-test').addEventListener('click',function (evt) {
+    rect.set({
+      left : 128,
+      top : 128,
+      angle : 0
+    })
+    rect.setCoords(); //변환 정보 적용
+
+    canvas.renderAll() //임으로 수정한 내용을 반영
+  })
+
+  //rect.bringToFront() //맨앞으로 가져오기
+
+</script>
+
+
+
+
+</body>
+</html>

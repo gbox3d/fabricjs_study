@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="../libs/fabric.js" ></script>
+</head>
+<body>
+
+<canvas id="main-canvas" width="256" height="256"  ></canvas>
+
+<script>
+
+  var canvas =  new fabric.Canvas('main-canvas', {
+    backgroundColor : '#000000'
+  })
+
+  // create a rectangle object
+  var rect = new fabric.Rect({
+
+    fill: '#ff0000',
+    width: 64,
+    height: 64
+  });
+
+  // "add" rectangle onto canvas
+  canvas.add(rect);
+
+  // console.log(rect.calcOwnMatrix() )
+  // console.log(rect.calcTransformMatrix() )
+
+  var _transform = fabric.util.composeMatrix({translateX:128,translateY:128,angle:45})
+  console.log(_transform)
+
+
+  function applyTransform() {
+
+    let _option = fabric.util.qrDecompose(_transform)
+    console.log(_option)
+
+    rect.setPositionByOrigin(
+      { x: _option.translateX, y: _option.translateY },
+      'center',
+      'center'
+    );
+
+    rect.set(_option)
+    rect.setCoords()
+    canvas.renderAll()
+
+  }
+
+
+</script>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>adv ex1</title>
+  <script src="../libs/fabric.js" ></script>
+</head>
+<body>
+
+<canvas id="main-canvas" width="256" height="256"  ></canvas>
+<button name="btn-toImg" >to img</button>
+
+<div name="output">
+
+  <img  >
+
+</div>
+
+
+<script>
+
+  function _main() {
+    var canvas =  new fabric.Canvas('main-canvas', {
+      backgroundColor : '#000000'
+    })
+
+    // create a rectangle object
+    var rect = new fabric.Rect({
+      left: 100,
+      top: 100,
+      fill: '#ff0000',
+      width: 64,
+      height: 64
+    });
+
+    // "add" rectangle onto canvas
+    canvas.add(rect);
+
+    document.querySelector('button[name=btn-toImg]').addEventListener('click',function (evt) {
+      var _container = document.querySelector('[name=output]')
+
+      var image = new Image();
+      image.onload = function () {
+        _container.appendChild(image)
+
+      }
+      image.src = canvas.toDataURL();
+
+    })
+
+  }
+
+  _main()
+
+
+</script>
+
+
+
+
+</body>
+</html>

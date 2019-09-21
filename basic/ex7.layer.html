@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="../libs/fabric.js" ></script>
+</head>
+<body>
+
+<canvas id="main-canvas" width="256" height="256"  ></canvas>
+
+<div id="object-info">
+  <p name="index" >-1</p>
+</div>
+
+<div>
+  <button id="btn-add-bottom" > add bottom </button>
+  <button id="btn-remove" > remove </button>
+  <button id="btn-visible" > visible </button>
+</div>
+
+<div id="moveto" >
+  <input> <button>move</button>
+</div>
+
+<script>
+
+  var fbCanvas =  new fabric.Canvas('main-canvas', {
+    backgroundColor : '#000000',
+    preserveObjectStacking : true //선택한 오브잭트 현재 z 순서  유지
+  })
+  // create a rectangle object
+  var rect = [
+    new fabric.Rect({
+      left: 32,
+      top: 32,
+      fill: '#ff0000',
+      width: 64,
+      height: 64
+    }),
+    new fabric.Rect({
+      left: 64,
+      top: 64,
+      fill: '#ffff00',
+      width: 64,
+      height: 64
+    }),
+    new fabric.Rect({
+      left: 96,
+      top: 96,
+      fill: '#2aff3c',
+      width: 64,
+      height: 64
+    })
+  ];
+
+  rect.forEach(_=> {
+    fbCanvas.add(_)
+  })
+
+
+  document.querySelector('#btn-add-bottom').addEventListener('click',(evt)=> {
+
+    let _obj = new fabric.Rect({
+      left: 128,
+      top: 128,
+      fill: '#2af',
+      width: 64,
+      height: 64
+    })
+
+    // fbCanvas.add(_obj)
+    fbCanvas.insertAt(_obj,0)
+
+  });
+
+  document.querySelector("#moveto button").addEventListener('click',(evt)=> {
+
+    let _idx =  parseInt( document.querySelector("#moveto input").value );
+
+    let _activeObj = fbCanvas.getActiveObject()
+
+    if(_activeObj) {
+      fbCanvas.moveTo(_activeObj,_idx)
+    }
+  });
+
+  document.querySelector('#btn-remove').addEventListener('click',(evt)=> {
+    let _activeObj = fbCanvas.getActiveObject()
+
+    if(_activeObj) {
+      fbCanvas.remove(_activeObj)
+    }
+
+
+  });
+
+  document.querySelector('#btn-visible').addEventListener('click',(evt)=> {
+    let _activeObj = fbCanvas.getActiveObject()
+    if(_activeObj) {
+      //토글 처리
+      _activeObj.set('visible',!_activeObj.get('visible'))
+      fbCanvas.renderAll()
+    }
+
+  });
+
+  function getIndex(_) {
+    console.log(_.selected)
+
+    //오브잭트리스트내의 인덱스 구하기
+    let _idx = fbCanvas.getObjects().findIndex((_obj)=>{
+      return _obj === fbCanvas.getActiveObject()
+    })
+    console.log(_idx)
+
+    document.querySelector('#object-info [name=index]').innerText = _idx;
+    return _idx
+
+  }
+
+  fbCanvas.on('selection:updated',getIndex)
+  fbCanvas.on('selection:created',getIndex)
+
+
+</script>
+
+
+
+
+</body>
+</html>

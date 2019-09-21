@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="../libs/fabric.js" ></script>
+</head>
+<body>
+
+<canvas id="main-canvas" width="512" height="512"  ></canvas>
+
+<script>
+
+  var fbCanvas =  new fabric.Canvas('main-canvas', {
+    backgroundColor : '#000000',
+    preserveObjectStacking : true //선택한 오브잭트 현재 z 순서  유지
+  });
+
+  var testObj;
+
+  fabric.Image.fromURL('../res/sana.jpg',((object) =>{
+
+    console.log(object);
+    testObj = object
+    object.set("left",10)
+    object.set("top",20)
+    object.set("selectable",false)
+    object.set("scaleX",0.5)
+    object.set("scaleY",0.5)
+
+    //크기 구하기
+    console.log(object.get("width"),object.get("height"))
+    // // object.set("width",256)
+    // // object.set("height",256);
+    //object.setCoords()
+    fbCanvas.add(object);
+
+  }));
+
+
+</script>
+
+</body>
+</html>
