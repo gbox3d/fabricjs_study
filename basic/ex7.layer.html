@@ -99,9 +99,9 @@
   document.querySelector('#btn-add-bottom').addEventListener('click',(evt)=> {
 
     let _obj = new fabric.Rect({
-      left: 128,
-      top: 128,
-      fill: '#2af',
+      left: fabric.util.getRandomInt(0,256),
+      top: fabric.util.getRandomInt(0,256),
+      fill: `rgb(${fabric.util.getRandomInt(0,255)},${fabric.util.getRandomInt(0,255)},${fabric.util.getRandomInt(0,255)})`,
       width: 64,
       height: 64
     })
@@ -150,22 +150,19 @@
 
   });
 
-  function getIndex(_) {
-    console.log(_.selected)
 
-    //오브잭트리스트내의 인덱스 구하기
-    let _idx = fbCanvas.getObjects().findIndex((_obj)=>{
-      return _obj === fbCanvas.getActiveObject()
-    })
+  // fbCanvas.on('selection:updated',getIndex)
+  // fbCanvas.on('selection:created',getIndex)
+
+  fbCanvas.on('mouse:down',(evt)=> {
+    // console.log(evt)
+    let _findObj = canvas.findTarget(evt)
+    let _idx = fbCanvas.getObjects().findIndex(_=>_===_findObj)
     console.log(_idx)
 
     document.querySelector('#object-info [name=index]').innerText = _idx;
-    return _idx
 
-  }
-
-  fbCanvas.on('selection:updated',getIndex)
-  fbCanvas.on('selection:created',getIndex)
+  })
 
 
 </script>
