@@ -9,14 +9,18 @@
 
 <canvas id="main-canvas" width="512" height="512"  ></canvas>
 
+<div>
+  <button id="test-1"> change img </button>
+</div>
+
 <script>
 
-  var fbCanvas =  new fabric.Canvas('main-canvas', {
+  let fbCanvas =  new fabric.Canvas('main-canvas', {
     backgroundColor : '#000000',
     preserveObjectStacking : true //선택한 오브잭트 현재 z 순서  유지
   });
 
-  var testObj;
+  let testObj;
 
   fabric.Image.fromURL('../res/sana.jpg',((object) =>{
 
@@ -24,7 +28,7 @@
     testObj = object
     object.set("left",10)
     object.set("top",20)
-    object.set("selectable",false)
+    // object.set("selectable",false)
     object.set("scaleX",0.5)
     object.set("scaleY",0.5)
 
@@ -36,6 +40,23 @@
     fbCanvas.add(object);
 
   }));
+
+
+  fabric.util.getById('test-1').addEventListener('click',evt=> {
+
+    //이미지를 파일로 부터 로딩 loadImage 함수는 img element 객체를 콜백한다.
+    fabric.util.loadImage('../res/dprk2.jpg',_img=> {
+
+      //img element적용
+      console.log(_img)
+      testObj.setElement(_img).setCoords()
+      fbCanvas.renderAll();
+
+    })
+
+  })
+
+
 
 
 </script>
