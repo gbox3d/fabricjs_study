@@ -156,7 +156,7 @@
 
   fbCanvas.on('mouse:down',(evt)=> {
     // console.log(evt)
-    let _findObj = canvas.findTarget(evt)
+    let _findObj = fbCanvas.findTarget(evt)
     let _idx = fbCanvas.getObjects().findIndex(_=>_===_findObj)
     console.log(_idx)
 
