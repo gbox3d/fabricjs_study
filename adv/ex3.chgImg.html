@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>dummy object</title>
+  <script src="../libs/fabric.js" ></script>
+</head>
+<body>
+
+<canvas id="main-canvas" width="512" height="512"  ></canvas>
+
+<div>
+  <button id="test-1" >Test </button>
+</div>
+
+
+<script>
+
+  let fbCanvas =  new fabric.Canvas('main-canvas', {
+    backgroundColor : '#a278ff',
+  })
+
+  // create a  object
+  let dummy = new fabric.Image(null,{
+    scaleX : 0.5,
+    scaleY: 0.5
+
+  });
+
+  fbCanvas.add(dummy);
+
+  let imgObj;
+  fabric.util.loadImage('../res/dprk2.jpg',_img=> {
+    //img element적용
+    console.log(_img)
+    imgObj = _img
+  });
+
+  document.querySelector('#test-1').addEventListener('click',(evt)=> {
+
+    dummy.setElement(imgObj)
+    fbCanvas.renderAll();
+  });
+
+
+</script>
+
+
+
+
+</body>
+</html>
