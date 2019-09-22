@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>서브 클래싱</title>
+  <script src="../libs/fabric.js" ></script>
+</head>
+<body>
+
+<canvas id="main-canvas" width="256" height="256"  ></canvas>
+
+<p id="click-index" >
+
+</p>
+
+<script>
+
+  var myfabricCanvas = fabric.util.createClass(fabric.Canvas, {
+    type : 'myfabricCanvas',
+    initialize: function(domID,options) {
+      // options || (options = {});
+      console.log(options)
+      this.callSuper('initialize', domID,options);
+    },
+    getObjectIndex : function (object) {
+
+      let _idx = this.getObjects().findIndex((_obj)=>{
+        return _obj === object
+      })
+      // console.log(_idx)
+
+      return _idx
+
+    }
+  });
+
+  //서브 클래싱된 오브잭트 로 생성
+  var canvas =  new myfabricCanvas('main-canvas', {
+    backgroundColor : '#a278ff',
+    preserveObjectStacking : true //선택한 오브잭트 현재 z 순서  유지
+  });
+
+  // create a rectangle object
+  var rect = new fabric.Rect({
+    left: 100,
+    top: 100,
+    fill: '#ff0000',
+    width: 64,
+    height: 64
+  });
+
+  var circle = new fabric.Circle({
+    radius: 20, fill: 'green', left: 100, top: 100
+  });
+  var triangle = new fabric.Triangle({
+    width: 32, height: 32, fill: 'blue', left: 50, top: 50
+  });
+
+  // "add" rectangle onto canvas
+  canvas.add(rect);
+  canvas.add(circle);
+  canvas.add(triangle);
+
+  //클릭된 오브잭트 찾기
+  canvas.on('mouse:down',(evt)=> {
+    // console.log(evt)
+    var _findObj = canvas.findTarget(evt)
+    console.log( _findObj )
+
+    //콜랙션에서 몇번째 인지 구하기
+    //console.log(  )
+
+    document.querySelector('#click-index').innerText = `click : ${canvas.getObjectIndex( _findObj )}`;
+
+  })
+
+
+</script>
+
+
+
+
+</body>
+</html>

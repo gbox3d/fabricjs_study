@@ -7,7 +7,7 @@
 </head>
 <body>
 
-<canvas id="main-canvas" width="256" height="256"  ></canvas>
+<canvas id="main-canvas" width="512" height="512"  ></canvas>
 
 <div id="object-info">
   <p name="index" >-1</p>
@@ -17,6 +17,8 @@
   <button id="btn-add-bottom" > add bottom </button>
   <button id="btn-remove" > remove </button>
   <button id="btn-visible" > visible </button>
+  <button id="btn-overlayimg" > overlay Image </button>
+
 </div>
 
 <div id="moveto" >
@@ -26,7 +28,7 @@
 <script>
 
   var fbCanvas =  new fabric.Canvas('main-canvas', {
-    backgroundColor : '#000000',
+    backgroundColor : '#a278ff',
     preserveObjectStacking : true //선택한 오브잭트 현재 z 순서  유지
   })
   // create a rectangle object
@@ -57,6 +59,41 @@
   rect.forEach(_=> {
     fbCanvas.add(_)
   })
+
+  // fbCanvas.setOverlayImage('../res/ubiqos_logo.png',(_)=> {
+  //
+  //   console.log(_)
+  //   fbCanvas.renderAll()
+  // },
+  //   {
+  //     width : 256,
+  //     height : 256
+  //   }
+  // )
+
+
+  fabric.Image.fromURL('../res/ubiqos_logo.png',((object) =>{
+
+    console.log(object);
+    // testObj = object
+    // object.set("left",10)
+    // object.set("top",20)
+    // object.set("selectable",false)
+    object.set("scaleX",fbCanvas.get('width')/object.get("width"))
+    object.set("scaleY",fbCanvas.get('height')/object.get("height"))
+
+    //크기 구하기
+    console.log(object.get("width"),object.get("height"))
+    // // object.set("width",256)
+    // // object.set("height",256);
+    //object.setCoords()
+    // fbCanvas.add(object);
+
+    fbCanvas.set('overlayImage',object)
+
+    fbCanvas.renderAll()
+
+  }));
 
 
   document.querySelector('#btn-add-bottom').addEventListener('click',(evt)=> {
@@ -102,6 +139,14 @@
       _activeObj.set('visible',!_activeObj.get('visible'))
       fbCanvas.renderAll()
     }
+
+  });
+
+
+  document.querySelector('#btn-overlayimg').addEventListener('click',(evt)=> {
+
+    fbCanvas.overlayImage.set('visible', !fbCanvas.overlayImage.get('visible'))
+    fbCanvas.renderAll();
 
   });
 
