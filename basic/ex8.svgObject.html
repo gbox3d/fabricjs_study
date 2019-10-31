@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="../libs/fabric.js" ></script>
+</head>
+<body>
+
+<canvas id="main-canvas" width="512" height="512"  ></canvas>
+
+<script>
+
+  var fbCanvas =  new fabric.Canvas('main-canvas', {
+    backgroundColor : '#a278ff'
+  })
+
+  var svgObj
+
+
+  fabric.loadSVGFromURL('../res/pt1.svg', function(objects, options) {
+
+    console.log(objects)
+    svgObj = fabric.util.groupSVGElements(objects, options);
+
+    svgObj.set({
+      scaleX : 512 / svgObj.get('width'),
+      scaleY : 512 / svgObj.get('height')
+    })
+
+    fbCanvas.add(svgObj)
+    fbCanvas.renderAll()
+
+  });
+
+
+
+
+</script>
+
+
+
+
+</body>
+</html>

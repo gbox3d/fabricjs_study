@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>  </title>
+  <script src="../libs/fabric.js" ></script>
+</head>
+<body>
+
+<canvas id="main-canvas" width="512" height="512"  ></canvas>
+
+<div name="edit-color" >
+  <ul name="colors" >
+
+  </ul>
+<!--  <input type="color"  value="#000000" >-->
+  <button id="test-1" >Test1 </button>
+</div>
+
+<script>
+
+  let fbCanvas =  new fabric.Canvas('main-canvas', {
+    backgroundColor : '#5d5d5d',
+  })
+
+  // create a  object
+  let dummy = new fabric.Group();
+  fbCanvas.add(dummy);
+
+  // let elements =
+
+  fabric.loadSVGFromURL('../res/pt1.svg', function(elements, options) {
+
+    if (options) {
+      //중심점 구하기
+      if (options.width && options.height) {
+        options.centerPoint = {
+          x: options.width / 2,
+          y: options.height / 2
+        };
+      }
+    }
+    dummy.initialize(elements,options)
+    dummy.set({
+      scaleX : 512 / dummy.get('width'),
+      scaleY : 512 / dummy.get('height')
+    })
+    dummy.setCoords()
+    fbCanvas.renderAll()
+
+    dummy.getObjects().forEach((_,index)=> {
+      console.log(_)
+      let _container = document.querySelector("[name=edit-color] ul[name=colors]")
+      let _li = document.createElement('li')
+      let _id = _.id + index
+      _li.setAttribute("name", _id );
+      _li.innerHTML = `${_id} , <input type="color" value="${_.get("fill")}" >`
+
+      _container.appendChild(_li)
+
+    })
+
+  });
+
+  document.querySelector('#test-1').addEventListener('click',_=> {
+
+    // let _color = document.querySelector('[name=edit-color] input').value
+    // console.log(_color)
+
+    dummy.getObjects().forEach((_,index)=> {
+      let _id = _.id + index
+      let _color = document.querySelector(`[name=edit-color] li[name=${_id}] input`).value
+
+      _.set('fill',_color)
+
+    })
+    // dummy.getObjects()[0].setColor(_color)
+    fbCanvas.renderAll()
+
+
+  })
+
+
+
+
+</script>
+
+
+
+</body>
+</html>

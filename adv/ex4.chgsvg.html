@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>dummy object</title>
+  <script src="../libs/fabric.js" ></script>
+</head>
+<body>
+
+<canvas id="main-canvas" width="512" height="512"  ></canvas>
+
+<div>
+  <button id="test-1" >Test1 </button>
+  <button id="test-2" >Test2</button>
+</div>
+
+
+<script>
+
+  let fbCanvas =  new fabric.Canvas('main-canvas', {
+    backgroundColor : '#a278ff',
+  })
+
+  // create a  object
+  let dummy = new fabric.Group();
+
+  fbCanvas.add(dummy);
+
+  document.querySelector('#test-2').addEventListener('click',(evt)=> {
+    fabric.loadSVGFromURL('../res/pt1.svg', function(elements, options) {
+
+      console.log(elements)
+
+      if (elements && elements.length === 1) {
+        return elements[0];
+      }
+      if (options) {
+        if (options.width && options.height) {
+          options.centerPoint = {
+            x: options.width / 2,
+            y: options.height / 2
+          };
+        }
+        else {
+          delete options.width;
+          delete options.height;
+        }
+      }
+
+      dummy.initialize(elements,options)
+      dummy.set({
+        scaleX : 512 / dummy.get('width'),
+        scaleY : 512 / dummy.get('height')
+      })
+      dummy.setCoords()
+      fbCanvas.renderAll()
+    });
+
+  })
+
+
+  document.querySelector('#test-1').addEventListener('click',(evt)=> {
+    fabric.loadSVGFromURL('../res/rose.svg', function(elements, options) {
+      console.log(elements)
+      if (elements && elements.length === 1) {
+        return elements[0];
+      }
+      if (options) {
+        if (options.width && options.height) {
+          options.centerPoint = {
+            x: options.width / 2,
+            y: options.height / 2
+          };
+        }
+        else {
+          delete options.width;
+          delete options.height;
+        }
+      }
+
+      dummy.initialize(elements,options)
+      dummy.set({
+        scaleX : 512 / dummy.get('width'),
+        scaleY : 512 / dummy.get('height')
+      })
+      dummy.setCoords()
+      fbCanvas.renderAll()
+
+    });
+
+
+  });
+
+
+</script>
+
+
+
+
+</body>
+</html>
