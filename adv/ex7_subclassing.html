@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title> sub classing </title>
+  <script src="../libs/fabric.js" ></script>
+</head>
+<body>
+
+<canvas id="main-canvas" width="512" height="512"  ></canvas>
+<canvas id="main-canvas2" width="512" height="512"  ></canvas>
+
+<div>
+  <button id="test1">test1</button>
+</div>
+
+<script>
+
+  // 참고 : http://fabricjs.com/fabric-intro-part-3#subclassing
+
+  fabric.MyImage = fabric.util.createClass(fabric.Image,{
+    type: 'MyImage',
+    _render : function (ctx) {
+      console.log('MyImage render code ')
+
+      //부모 함수 콜
+      this.callSuper('_render',ctx);
+
+      // this._renderPaintInOrder(ctx);
+
+      ctx.fillStyle = "#FF0000";
+      ctx.fillRect(0, 0, 150, 75);
+
+      ctx.fillStyle = "rgb(255,255,255)";
+      ctx.font = "30px Arial";
+      ctx.fillText("oota nao", 0, 32);
+
+    }
+  });
+
+  //클로닝 또는 데이터로딩시에 사용
+  fabric.MyImage.fromObject = function(_object, callback) {
+    var object = fabric.util.object.clone(_object);
+    fabric.util.loadImage(object.src, function(img, error) {
+      if (error) {
+        callback && callback(null, error);
+        return;
+      }
+      fabric.Image.prototype._initFilters.call(object, object.filters, function(filters) {
+        object.filters = filters || [];
+        fabric.Image.prototype._initFilters.call(object, [object.resizeFilter], function(resizeFilters) {
+          object.resizeFilter = resizeFilters[0];
+          fabric.util.enlivenObjects([object.clipPath], function(enlivedProps) {
+            object.clipPath = enlivedProps[0];
+            var image = new fabric.MyImage(img, object);
+            callback(image);
+          });
+        });
+      });
+    }, null, object.crossOrigin);
+  };
+
+  fabric.MyImage.fromURL = function(url, callback, imgOptions) {
+    fabric.util.loadImage(url, function(img) {
+      callback && callback(new fabric.MyImage(img, imgOptions));
+    }, null, imgOptions && imgOptions.crossOrigin);
+  };
+
+  var fbCanvas =  new fabric.Canvas('main-canvas', {
+    backgroundColor : '#a278ff'
+  })
+
+  let imgObj
+
+  fabric.MyImage.fromURL('../res/oota_nao.jpg',((object) =>{
+
+    object.set("left",10)
+    object.set("top",20)
+    object.set("scaleX",0.5)
+    object.set("scaleY",0.5)
+
+    fbCanvas.add(object)
+
+    imgObj = object
+
+  }));
+
+  document.querySelector('#test1').addEventListener('click',()=> {
+
+
+
+  })
+
+
+
+</script>
+
+
+
+
+</body>
+</html>
