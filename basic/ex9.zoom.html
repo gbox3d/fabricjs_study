@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="../libs/fabric.js" ></script>
+</head>
+<body>
+
+<canvas id="main-canvas" width="512" height="512"  ></canvas>
+
+<div>
+  <button id="test1" >test1</button>
+  <button id="test2" >test2</button>
+
+</div>
+
+<script>
+
+  var fbCanvas =  new fabric.Canvas('main-canvas', {
+    backgroundColor : '#a278ff'
+  })
+
+  var svgObj
+
+
+
+  fabric.loadSVGFromURL('../res/dots_3.svg', function(objects, options) {
+
+    console.log(objects)
+    svgObj = fabric.util.groupSVGElements(objects, options);
+
+    fbCanvas.add(svgObj)
+    fbCanvas.renderAll()
+
+  });
+
+  document.querySelector('#test1').addEventListener('click',_=> {
+    fbCanvas.setZoom(2)
+  })
+
+  document.querySelector('#test2').addEventListener('click',_=> {
+    fbCanvas.setZoom(1)
+  })
+
+
+
+
+</script>
+
+
+
+
+</body>
+</html>

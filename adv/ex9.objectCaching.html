@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>object caching</title>
+  <script src="../libs/fabric.js" ></script>
+</head>
+<body>
+
+<canvas id="main-canvas" width="512" height="512"  ></canvas>
+
+<div>
+  <button id="test1" >test1</button>
+  <button id="test2" >test2</button>
+  <button id="test3" > caching on </button>
+  <button id="test4" > caching off </button>
+</div>
+
+<script>
+
+  //svg 해상도 문제
+  //http://fabricjs.com/svg-caching
+
+  var fbCanvas =  new fabric.Canvas('main-canvas', {
+    backgroundColor : '#a278ff'
+  })
+
+  var svgObj
+
+  fabric.loadSVGFromURL('../res/dots_3.svg', function(objects, options) {
+
+    console.log(objects)
+    svgObj = fabric.util.groupSVGElements(objects, options);
+    fbCanvas.add(svgObj)
+
+    fabric.Image.fromURL('../res/mina2.png',((object) => {
+      object.set({
+        scaleX : 0.1,
+        scaleY : 0.1,
+        left : 10,
+        top : 10
+      })
+      // object.set("scaleX",0.1)
+      // object.set("scaleY",0.1)
+      // object.setCoords()
+      fbCanvas.add(object);
+
+      var text = new fabric.Text('유비코스', { left: 0, top: 0 ,fill:'red'});
+      fbCanvas.add(text)
+
+      fbCanvas.renderAll()
+
+    }));
+
+  });
+
+
+  // fabric.Image.fromURL('../res/mina2.png',((object) =>{
+  //
+  //   object.set({
+  //     scaleX : 0.1,
+  //     scaleY : 0.1
+  //   })
+  //
+  //   fbCanvas.add(object);
+  //   svgObj = object
+  //
+  //
+  //
+  // }));
+
+  document.querySelector('#test1').addEventListener('click',_=> {
+    fbCanvas.setZoom(10)
+  })
+
+  document.querySelector('#test2').addEventListener('click',_=> {
+    fbCanvas.setZoom(1)
+  })
+
+  document.querySelector('#test3').addEventListener('click',_=> {
+    fabric.Object.prototype.objectCaching = true
+
+    //캐쉬 업데이트
+    fbCanvas.forEachObject(function(obj, i) {
+      obj.set('dirty', true);
+    });
+    fbCanvas.renderAll()
+
+  })
+
+  document.querySelector('#test4').addEventListener('click',_=> {
+    fabric.Object.prototype.objectCaching = false
+
+    //캐쉬 업데이트
+    fbCanvas.forEachObject(function(obj, i) {
+      obj.set('dirty', true);
+    })
+
+    fbCanvas.renderAll()
+
+  })
+
+
+
+</script>
+
+
+
+
+</body>
+</html>
