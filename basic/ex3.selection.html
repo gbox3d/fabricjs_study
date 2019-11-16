@@ -3,14 +3,68 @@
 <head>
   <meta charset="UTF-8">
   <title>Title</title>
+  <script src="../libs/fabric.js" ></script>
 </head>
 <body>
+
+<canvas id="main-canvas" width="256" height="256"  ></canvas>
+
+<button id="btn-group" >group</button>
+
+<div id="select" >
+
+  <input value="0">
+  <button>select</button>
+
+</div>
 
 <script>
 
   //http://fabricjs.com/manage-selection
+  //http://fabricjs.com/fabric-intro-part-4#customization
+
+  fabric.util.addListener(fabric.window,'load',()=> {
+
+    //에디터 위젯 속성 지정
+    fabric.Object.prototype.transparentCorners = false;
+
+    var fbCanvas =  new fabric.Canvas('main-canvas', {
+      backgroundColor : '#a278ff'
+    })
+
+    var red = new fabric.Rect({
+      selectable : false, //선택 불가상태
+      top: 100, left: 0, width: 80, height: 50,
+      fill: 'red'
+    });
+
+    var blue = new fabric.Rect({
+      top: 0, left: 100, width: 50, height: 70, fill: 'blue' });
+    var green = new fabric.Rect({
+      top: 100, left: 100, width: 60, height: 60, fill: 'green' });
+
+    // "add" rectangle onto canvas
+    fbCanvas.add(red);
+    fbCanvas.add(blue);
+    fbCanvas.add(green);
+
+    document.querySelector('#select button').addEventListener('click',_=> {
+
+      // console.log()
+      let _index =  parseInt( document.querySelector('#select input').value )
+
+      fbCanvas.setActiveObject( fbCanvas.item(_index) )
+      fbCanvas.renderAll()
+
+    })
+
+  })
 
 
 </script>
+
+
+
+
 </body>
 </html>
