@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="../libs/fabric.js" ></script>
+</head>
+<body>
+
+<canvas id="main-canvas" width="256" height="256"  ></canvas>
+
+<script>
+
+  var fbCanvas =  new fabric.Canvas('main-canvas', {
+    backgroundColor : '#a278ff'
+  })
+
+  // create a rectangle object
+  var rect = new fabric.Rect({
+    left: 100,
+    top: 100,
+    fill: '#ff0000',
+    width: 64,
+    height: 64
+  });
+
+  // "add" rectangle onto canvas
+
+
+  fbCanvas.on('mouse:down', function(evt) {
+    console.log(evt)
+    if(evt.target) {
+      evt.target.visible = false
+      fbCanvas.discardActiveObject()
+      fbCanvas.requestRenderAll()
+
+    }
+  });
+
+
+  fbCanvas.add(rect);
+
+
+</script>
+
+
+
+
+</body>
+</html>
