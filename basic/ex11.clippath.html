@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="../libs/fabric.js" ></script>
+</head>
+<body>
+
+<canvas id="main-canvas" width="256" height="256"  ></canvas>
+
+<script>
+
+  fabric.util.addListener(fabric.window,'load',()=> {
+    let fbCanvas =  new fabric.Canvas('main-canvas', {
+      backgroundColor : '#a278ff'
+    })
+
+    //http://fabricjs.com/clippath-part1
+    //todo...
+
+
+    fbCanvas.add(rect);
+
+  })
+
+
+
+
+</script>
+
+
+
+
+</body>
+</html>

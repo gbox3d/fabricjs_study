@@ -11,6 +11,8 @@
 
 <script>
 
+  console.log(fabric.version)
+
   var fbCanvas =  new fabric.Canvas('main-canvas', {
     backgroundColor : '#a278ff'
   })
@@ -26,6 +28,12 @@
 
   // "add" rectangle onto canvas
   fbCanvas.add(rect);
+
+  // fabric.util.addListener(fabric.window,'load',()=> {
+  //
+  // })
+
+
 
 
 </script>
