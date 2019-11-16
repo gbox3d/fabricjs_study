@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="../libs/fabric.js" ></script>
+</head>
+<body>
+
+<canvas id="main-canvas" width="256" height="256"  ></canvas>
+
+<script>
+
+
+  var fbCanvas =  new fabric.StaticCanvas('main-canvas', {
+    backgroundColor : '#a278ff'
+  })
+
+  // create a rectangle object
+  var rect = new fabric.Rect({
+    left: 100,
+    top: 100,
+    fill: '#ff0000',
+    width: 64,
+    height: 64
+  });
+
+  rect.set('blink',false)
+
+  //클릭이벤트 처리
+  rect.on('mouse:click',_=> {
+    console.log(_)
+    console.log(_.targetObj.getLocalPointer(_.baseEvt))
+    if( _.targetObj.toggle('blink').get("blink") )
+      _.targetObj.set('fill','#00ff00');
+    else
+      _.targetObj.set('fill','#ff0000');
+
+    fbCanvas.renderAll()
+  })
+
+  // "add" rectangle onto canvas
+  fbCanvas.add(rect);
+
+  fabric.util.addListener(fbCanvas.getElement(),'click',_=> {
+    // console.log(_.offsetX,_.offsetY)
+
+    fbCanvas.forEachObject((obj,index)=> {
+      //충돌처리
+      if(obj.containsPoint(new fabric.Point(_.offsetX,_.offsetY))) {
+        console.log('hit')
+        obj.trigger('mouse:click',{
+            targetObj : obj,
+            baseEvt : _
+          }
+        );
+      }
+    })
+  });
+
+
+
+
+
+
+</script>
+
+
+
+
+</body>
+</html>
