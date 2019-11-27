@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="../libs/fabric.js" ></script>
+</head>
+<body>
+
+<canvas id="main-canvas" width="256" height="256"  ></canvas>
+
+<script>
+
+  //https://stackoverflow.com/questions/18008473/convert-html5-canvas-to-img-element
+
+  console.log(fabric.version)
+
+  var fbCanvas =  new fabric.Canvas('main-canvas', {
+    backgroundColor : '#a278ff',
+    enableRetinaScaling : false //레티나 비활성화
+  })
+
+
+
+  var _canvas = fabric.util.copyCanvasElement(fbCanvas.getElement())
+  var ctx = _canvas.getContext("2d");
+  ctx.moveTo(100, 100);
+  ctx.strokeStyle = "#ffff00"
+  ctx.lineTo(200, 100);
+  ctx.lineTo(100, 200);
+  ctx.lineTo(100, 100);
+  ctx.stroke();
+  // document.body.appendChild(_canvas);
+
+  // create a  object
+  let dummy = new fabric.Image(null,{});
+
+  fbCanvas.add(dummy);
+
+  let _imgElm = document.createElement('img');
+  _imgElm.onload = function(_) {
+    console.log(_)
+    dummy.setElement(_.target)
+    fbCanvas.renderAll();
+  }
+  _imgElm.src = _canvas.toDataURL();
+
+</script>
+
+
+
+
+</body>
+</html>

@@ -14,7 +14,8 @@
   console.log(fabric.version)
 
   var fbCanvas =  new fabric.Canvas('main-canvas', {
-    backgroundColor : '#a278ff'
+    backgroundColor : '#a278ff',
+    enableRetinaScaling : false //레티나 비활성화
   })
 
   // create a rectangle object
@@ -32,9 +33,6 @@
   // fabric.util.addListener(fabric.window,'load',()=> {
   //
   // })
-
-
-
 
 </script>
 
