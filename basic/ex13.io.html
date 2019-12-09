@@ -7,7 +7,7 @@
 </head>
 <body>
 
-<canvas id="main-canvas" width="256" height="256"  ></canvas>
+<canvas id="main-canvas" width="512" height="512"  ></canvas>
 
 <textarea id="output" >
 
@@ -42,6 +42,26 @@
 
     // "add" rectangle onto canvas
     fbCanvas.add(rect);
+
+
+    //svg object
+    let svgObj
+    fabric.loadSVGFromURL('../res/pt1.svg', function(objects, options) {
+
+        console.log(objects)
+        svgObj = fabric.util.groupSVGElements(objects, options);
+
+        svgObj.set({
+            scaleX : 512 / svgObj.get('width'),
+            scaleY : 512 / svgObj.get('height')
+        })
+
+        fbCanvas.add(svgObj)
+        fbCanvas.renderAll()
+
+    });
+
+
 
 
     document.querySelector('button#save').addEventListener('click',()=> {
