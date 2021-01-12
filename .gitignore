@@ -151,4 +151,8 @@ tags
 !.vscode/extensions.json
 
 
-node_modules
+node_modules/
+
+libs/
+
+package-lock.json/
