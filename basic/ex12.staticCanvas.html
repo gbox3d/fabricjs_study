@@ -25,19 +25,19 @@
     height: 64
   });
 
-  rect.set('blink',false)
+  // rect.set('blink',false)
 
-  //클릭이벤트 처리
-  rect.on('mouse:click',_=> {
-    console.log(_)
-    console.log(_.targetObj.getLocalPointer(_.baseEvt))
-    if( _.targetObj.toggle('blink').get("blink") )
-      _.targetObj.set('fill','#00ff00');
-    else
-      _.targetObj.set('fill','#ff0000');
+  // //클릭이벤트 처리
+  // rect.on('mouse:click',_=> {
+  //   console.log(_)
+  //   console.log(_.targetObj.getLocalPointer(_.baseEvt))
+  //   if( _.targetObj.toggle('blink').get("blink") )
+  //     _.targetObj.set('fill','#00ff00');
+  //   else
+  //     _.targetObj.set('fill','#ff0000');
 
-    fbCanvas.renderAll()
-  })
+  //   fbCanvas.renderAll()
+  // })
 
   // "add" rectangle onto canvas
   fbCanvas.add(rect);
@@ -49,11 +49,14 @@
       //충돌처리
       if(obj.containsPoint(new fabric.Point(_.offsetX,_.offsetY))) {
         console.log('hit')
-        obj.trigger('mouse:click',{
-            targetObj : obj,
-            baseEvt : _
-          }
-        );
+        obj.set('fill','#00ff00');
+        fbCanvas.requestRenderAll();
+
+        // fbCanvas.fire('mouse:click',{
+        //     targetObj : obj,
+        //     baseEvt : _
+        //   }
+        // );
       }
     })
   });

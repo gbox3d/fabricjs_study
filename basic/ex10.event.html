@@ -9,6 +9,8 @@
 
 <canvas id="main-canvas" width="256" height="256"  ></canvas>
 
+<button id='fire'> fire </button>
+
 <script>
 
   var fbCanvas =  new fabric.Canvas('main-canvas', {
@@ -24,6 +26,12 @@
     height: 64
   });
 
+  rect.on('myevt:hello',(_)=> {
+    console.log('hello event')
+    console.log(_)
+    rect.set('fill','#00ff00')
+  })
+
   // "add" rectangle onto canvas
 
 
@@ -36,6 +44,11 @@
 
     }
   });
+
+  document.querySelector('#fire').addEventListener('click',()=> {
+    rect.fire('myevt:hello',{msg : 'world'})
+    fbCanvas.requestRenderAll()
+  })
 
 
   fbCanvas.add(rect);
