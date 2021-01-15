@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>adv ex1</title>
+  <script src="../libs/fabric.js" ></script>
+</head>
+<body>
+
+<canvas id="main-canvas" width="256" height="256"  ></canvas>
+<button name="btn-toImg" >to blob</button>
+
+<div name="output">
+  <img  >
+</div>
+
+
+<script>
+
+  async function _main() {
+
+    console.log('start')
+
+    var canvas =  new fabric.Canvas('main-canvas', {
+      backgroundColor : '#000000'
+    })
+
+    let _imgObj = await new Promise( (resolve,reject)=> {
+            fabric.Image.fromURL('../res/sana.jpg',_=>resolve(_))
+        })
+
+    console.log(_imgObj)
+
+    _imgObj.set({
+        left : 0,
+        top : 0,
+        scaleX : 0.2,
+        scaleY : 0.2
+    })
+
+    canvas.add(_imgObj)
+
+    // create a rectangle object
+    var rect = new fabric.Rect({
+      fill: 'transparent',
+      width: 64,
+      height: 64,
+      stroke: 'blue',
+      originX : 'center',
+      originY : 'center'
+    });
+    rect.setPositionByOrigin({
+        x:128,
+        y:128,
+    })
+    
+    // "add" rectangle onto canvas
+    canvas.add(rect);
+
+    document.querySelector('button[name=btn-toImg]').addEventListener('click', async function (evt) {
+
+        let _bound = rect.getBoundingRect()
+
+        let _base64_data = canvas.toDataURL({
+            format : 'png',
+            left: _bound.left,
+            top: _bound.top,
+            width: _bound.width,
+            height: _bound.height,
+        })
+
+        console.log(_base64_data)
+
+        //파일업로드 할때 blob로 넘겨주어야한다.
+        let _blob = await (await fetch(_base64_data)).blob()
+        console.log(_blob)
+
+        /*
+        //fetch 로 서버에 업로딩 하는 방법
+        let _ = await (await (fetch(`http://${baseAddr.ip}:${baseAddr.port}/upload`, {
+            method: 'POST',
+            body: _blob,
+            headers: new Headers({
+                // 'detector-header-data' : JSON.stringify({ fn: 'none', th: 0.5, dtf: 1 })
+                'Content-Type': _blob.type,
+                'Upload-Name': uploadName,
+                'file-size': _blob.size
+            }), // 이 부분은 따로 설정하고싶은 header가 있다면 넣으세요
+        }))).json();
+        */
+
+        //만약 blob를 이미지오브잭트에 넘겨주려면 다음과 같이 한다.
+        //base64로 변환 예제 
+        let data_uri = await new Promise((resolve, reject) => {
+            let reader = new FileReader();
+	        reader.onload = (e)=> {
+                resolve(reader.result)
+	        }
+	        reader.readAsDataURL(_blob);
+        })
+
+        document.querySelector('[name=output] img').src = data_uri  //아래 소스와 같다.
+        // document.querySelector('[name=output] img').src = _base64_data
+
+        
+    })
+
+  }
+
+  _main()
+
+
+</script>
+
+
+
+
+</body>
+</html>
