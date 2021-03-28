@@ -1,72 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>adv ex1</title>
-  <script src="../libs/fabric.js" ></script>
+  <script src="../libs/fabric.js"></script>
 </head>
+
 <body>
 
-<canvas id="main-canvas" width="256" height="256"  ></canvas>
-<button name="btn-toImg" >to blob</button>
+  <canvas id="main-canvas" width="1024" height="1024"></canvas>
+  <button name="btn-toImg">to blob</button>
 
-<div name="output">
-  <img  >
-</div>
+  <div name="output">
+    <img>
+  </div>
 
 
-<script>
+  <script>
 
-  async function _main() {
+    async function _main() {
 
-    console.log('start')
+      console.log('start')
 
-    var canvas =  new fabric.Canvas('main-canvas', {
-      backgroundColor : '#000000'
-    })
+      var canvas = new fabric.StaticCanvas('main-canvas', {
+        backgroundColor: '#ffffff',
+        enableRetinaScaling: false
+      })
 
-    let _imgObj = await new Promise( (resolve,reject)=> {
-            fabric.Image.fromURL('../res/sana.jpg',_=>resolve(_))
-        })
+      let _imgObj = await new Promise((resolve, reject) => {
+        fabric.Image.fromURL('../res/sana.jpg', _ => resolve(_))
+      })
 
-    console.log(_imgObj)
+      console.log(_imgObj)
 
-    _imgObj.set({
-        left : 0,
-        top : 0,
-        scaleX : 0.2,
-        scaleY : 0.2
-    })
+      _imgObj.set({
+        left: 0,
+        top: 0,
+        scaleX: 1.0,
+        scaleY: 1.0
+      })
 
-    canvas.add(_imgObj)
+      canvas.add(_imgObj)
 
-    // create a rectangle object
-    var rect = new fabric.Rect({
-      fill: 'transparent',
-      width: 64,
-      height: 64,
-      stroke: 'blue',
-      originX : 'center',
-      originY : 'center'
-    });
-    rect.setPositionByOrigin({
-        x:128,
-        y:128,
-    })
-    
-    // "add" rectangle onto canvas
-    canvas.add(rect);
+      // create a rectangle object
+      var rect = new fabric.Rect({
+        fill: 'transparent',
+        width: 64,
+        height: 64,
+        stroke: 'blue',
+        originX: 'center',
+        originY: 'center'
+      });
+      rect.setPositionByOrigin({
+        x: 128,
+        y: 128,
+      })
 
-    document.querySelector('button[name=btn-toImg]').addEventListener('click', async function (evt) {
+      // "add" rectangle onto canvas
+      canvas.add(rect);
+
+      document.querySelector('button[name=btn-toImg]').addEventListener('click', async function (evt) {
 
         let _bound = rect.getBoundingRect()
 
         let _base64_data = canvas.toDataURL({
-            format : 'png',
-            left: _bound.left,
-            top: _bound.top,
-            width: _bound.width,
-            height: _bound.height,
+          format: 'png',
+          // left : 0,
+          // top : 0, 
+          // width : 1024,
+          // height : 1024,
+          left: _bound.left,
+          top: _bound.top,
+          width: _bound.width,
+          height: _bound.height,
+          multiplier: 1,
+          enableRetinaScaling: false
         })
 
         console.log(_base64_data)
@@ -92,28 +101,29 @@
         //만약 blob를 이미지오브잭트에 넘겨주려면 다음과 같이 한다.
         //base64로 변환 예제 
         let data_uri = await new Promise((resolve, reject) => {
-            let reader = new FileReader();
-	        reader.onload = (e)=> {
-                resolve(reader.result)
-	        }
-	        reader.readAsDataURL(_blob);
+          let reader = new FileReader();
+          reader.onload = (e) => {
+            resolve(reader.result)
+          }
+          reader.readAsDataURL(_blob);
         })
 
         document.querySelector('[name=output] img').src = data_uri  //아래 소스와 같다.
         // document.querySelector('[name=output] img').src = _base64_data
 
-        
-    })
 
-  }
+      })
 
-  _main()
+    }
+
+    _main()
 
 
-</script>
+  </script>
 
 
 
 
 </body>
+
 </html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../libs/fabric.js"></script>
+</head>
+
+<body>
+
+    <canvas id="main-canvas" width="256" height="256"></canvas>
+
+    <script>
+        console.log(fabric.version)
+
+        var fbCanvas = new fabric.Canvas('main-canvas', {
+            backgroundColor: '#a278ff',
+            enableRetinaScaling: false //레티나 비활성화
+        })
+
+        var red = new fabric.Rect({
+            top: 100,
+            left: 0,
+            width: 80,
+            height: 50,
+            fill: 'red'
+        });
+        var blue = new fabric.Rect({
+            top: 0,
+            left: 100,
+            width: 50,
+            height: 70,
+            fill: 'blue'
+        });
+        var green = new fabric.Rect({
+            top: 100,
+            left: 100,
+            width: 60,
+            height: 60,
+            fill: 'green'
+        });
+        // canvas.add(red, blue, green);
+        // circle.add(text);
+
+        var group = new fabric.Group([], {
+            left: 0,
+            top: 0
+        });
+
+        group.addWithUpdate(red);
+        group.addWithUpdate(blue);
+        group.addWithUpdate(green);
+
+        group.on('mousedown', _ => {
+            console.log(_)
+
+        })
+
+        fbCanvas.add(group);
+    </script>
+
+
+
+
+</body>
+
+</html>

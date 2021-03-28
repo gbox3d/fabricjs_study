@@ -33,3 +33,6 @@ https://github.com/lyzerk/fabric-history
 wget https://raw.githubusercontent.com/lyzerk/fabric-history/master/src/index.js -O fabric-history.js
 wget https://raw.githubusercontent.com/lyzerk/fabric-history/master/src/index.min.js -O fabric-history.min.js
 ```
+
+## 기타
+- 씬관리 기능은없으므로 직접 만들어 써야할듯하다.

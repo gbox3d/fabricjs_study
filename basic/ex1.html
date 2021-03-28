@@ -1,43 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-  <script src="../libs/fabric.js" ></script>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../libs/fabric.js"></script>
 </head>
+
 <body>
 
-<canvas id="main-canvas" width="256" height="256"  ></canvas>
+    <canvas id="main-canvas" width="256" height="256"></canvas>
 
-<script>
+    <script>
+        console.log(fabric.version)
 
-  console.log(fabric.version)
+        var fbCanvas = new fabric.Canvas('main-canvas', {
+            backgroundColor: '#a278ff',
+            enableRetinaScaling: false //레티나 비활성화
+        })
 
-  var fbCanvas =  new fabric.Canvas('main-canvas', {
-    backgroundColor : '#a278ff',
-    enableRetinaScaling : false //레티나 비활성화
-  })
+        // create a rectangle object
+        var rect = new fabric.Rect({
+            left: 100,
+            top: 100,
+            fill: '#ff0000',
+            width: 64,
+            height: 64
+        });
 
-  // create a rectangle object
-  var rect = new fabric.Rect({
-    left: 100,
-    top: 100,
-    fill: '#ff0000',
-    width: 64,
-    height: 64
-  });
-
-  // "add" rectangle onto canvas
-  fbCanvas.add(rect);
-
-  // fabric.util.addListener(fabric.window,'load',()=> {
-  //
-  // })
-
-</script>
+        // "add" rectangle onto canvas
+        fbCanvas.add(rect);
+    </script>
 
 
 
 
 </body>
+
 </html>

@@ -1,65 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
-  <script src="../libs/fabric.js" ></script>
+  <title>read image example</title>
+  <script src="../libs/fabric.js"></script>
 </head>
+
 <body>
 
-<canvas id="main-canvas" width="512" height="512"  ></canvas>
+  <canvas id="main-canvas" width="512" height="512"></canvas>
 
-<div>
-  <button id="test-1"> change img </button>
-</div>
+  <div id="img-container">
+  </div>
 
-<script>
-
-  let fbCanvas =  new fabric.Canvas('main-canvas', {
-    backgroundColor : '#000000',
-    preserveObjectStacking : true //선택한 오브잭트 현재 z 순서  유지
-  });
-
-  let testObj;
-
-  fabric.Image.fromURL('../res/sana.jpg',((object) =>{
-
-    console.log(object);
-    testObj = object
-    object.set("left",10)
-    object.set("top",20)
-    // object.set("selectable",false)
-    object.set("scaleX",0.5)
-    object.set("scaleY",0.5)
-
-    //크기 구하기
-    console.log(object.get("width"),object.get("height"))
-    // // object.set("width",256)
-    // // object.set("height",256);
-    //object.setCoords()
-    fbCanvas.add(object);
-
-  }));
+  <div>
+    <button id="test-1"> change img </button>
+    <div>select file <input id="test-2" type="file"> </div>
+  </div>
 
 
-  fabric.util.getById('test-1').addEventListener('click',evt=> {
 
-    //이미지를 파일로 부터 로딩 loadImage 함수는 img element 객체를 콜백한다.
-    fabric.util.loadImage('../res/dprk2.jpg',_img=> {
+  <script>
 
-      //img element적용
-      console.log(_img)
-      testObj.setElement(_img).setCoords()
-      fbCanvas.renderAll();
+    let fbCanvas = new fabric.Canvas('main-canvas', {
+      backgroundColor: '#000000',
+      preserveObjectStacking: true //선택한 오브잭트 현재 z 순서  유지
+    });
+
+    let testObj;
+
+    fabric.Image.fromURL('../res/sana.jpg', ((object) => {
+
+      console.log(object);
+      testObj = object
+      object.set("left", 10)
+      object.set("top", 20)
+      // object.set("selectable",false)
+      object.set("scaleX", 0.5)
+      object.set("scaleY", 0.5)
+
+      //크기 구하기
+      console.log(object.get("width"), object.get("height"))
+      // // object.set("width",256)
+      // // object.set("height",256);
+      //object.setCoords()
+      fbCanvas.add(object);
+
+    }));
+
+
+    fabric.util.getById('test-1').addEventListener('click', evt => {
+
+      //이미지를 파일로 부터 로딩 loadImage 함수는 img element 객체를 콜백한다.
+      fabric.util.loadImage('../res/dprk2.jpg', _img => {
+
+        //img element적용
+        console.log(_img)
+        testObj.setElement(_img).setCoords()
+        fbCanvas.renderAll();
+
+      })
 
     })
 
-  })
+    document.querySelector('#test-2').addEventListener('change', async (evt) => {
+
+      // file -> dataURL -> img element
+
+      let _fileObj = evt.target.files[0];
+      if (_fileObj != undefined) {
+
+        //data url 객체로 만들기
+        let _imgURL = await new Promise((resolve, reject) => {
+          const urlreader = new FileReader();
+          urlreader.onload = _ => {
+            resolve(urlreader.result);
+          }
+          urlreader.readAsDataURL(_fileObj)
+        })
+
+        //img element 객체 만들기
+        let _imgObj = await new Promise((resolve, reject) => {
+          fabric.util.loadImage(_imgURL, _ => {
+            //img element적용
+            console.log(_)
+            resolve(_)
+          })
+        })
+
+        //canvas 에 이미지 객체 추가하기 
+        let fbImg = new fabric.Image(_imgObj)
+        fbCanvas.add(fbImg)
+        fbCanvas.renderAll();
+
+        //DOM 에 직접 추가하기
+        document.querySelector('#img-container').appendChild(_imgObj)
+
+
+      }
+
+    })
 
 
 
 
-</script>
+  </script>
 
 </body>
+
 </html>

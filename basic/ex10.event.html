@@ -32,18 +32,29 @@
     rect.set('fill','#00ff00')
   })
 
-  // "add" rectangle onto canvas
-
-
-  fbCanvas.on('mouse:down', function(evt) {
+  rect.on('mousedown',function(evt){
+    console.log('mouse down')
     console.log(evt)
-    if(evt.target) {
-      evt.target.visible = false
-      fbCanvas.discardActiveObject()
-      fbCanvas.requestRenderAll()
+    evt.target.set('fill','#0000ff')
+    fbCanvas.requestRenderAll()
+  })
 
-    }
-  });
+  rect.on('selected',function(evt){
+    console.log('selected ')
+    console.log(evt)
+    // evt.target.set('fill','#0000ff')
+    // fbCanvas.requestRenderAll()
+  })
+
+  // "add" rectangle onto canvas
+  // fbCanvas.on('mouse:down', function(evt) {
+  //   console.log(evt)
+  //   if(evt.target) {
+  //     evt.target.visible = false
+  //     fbCanvas.discardActiveObject()
+  //     fbCanvas.requestRenderAll()
+  //   }
+  // });
 
   document.querySelector('#fire').addEventListener('click',()=> {
     rect.fire('myevt:hello',{msg : 'world'})
