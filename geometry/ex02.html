@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title> ex02 </title>
+    <script src="../node_modules/fabric/dist/fabric.js"></script>
+
+    <style>
+        .hide {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="main-canvas" width="512" height="512"></canvas>
+
+    <script type="module">
+
+        const fbCanvas = new fabric.Canvas('main-canvas', {
+            backgroundColor: '#000',
+            enableRetinaScaling: false //레티나 비활성화
+        })
+
+        document.addEventListener('keydown', (evt) => {
+            console.log(evt)
+            switch(evt.key) {
+                case 'q': //정점 정보 리스팅
+                console.log(polygon.points)
+                break;
+                case 'w':
+                {
+                    //console.log(polygon._getNonTransformedDimensions())
+                    let baseSize = polygon._getNonTransformedDimensions()
+                    
+                    var newTransform = fabric.util.composeMatrix({translateX : -baseSize.x/4,translateX : -baseSize.y/4})
+                    //console.log(newTransform)
+                    fabric.util.applyTransformToObject(polygon,newTransform)
+                    polygon.setCoords()
+                    fbCanvas.requestRenderAll()
+                    console.log(polygon.calcTransformMatrix())
+                }
+                
+                break;
+            }
+        })
+
+        var points = [{
+            x: 0, y: 0
+        }, {
+            x: 128, y: 0
+        },
+        {
+            x: 96, y: 64
+        }
+            , {
+            x: 0, y: 128
+        }]
+
+        var polygon = new fabric.Polygon(points, {
+            left: 0,
+            top: 0,
+            fill: 'transparent',
+            strokeWidth: 8,
+            stroke: '#ffff00',
+            //scaleX: 4,
+            //scaleY: 4,
+            objectCaching: false,
+            transparentCorners: false,
+            cornerColor: 'blue',
+        });
+        fbCanvas.add(polygon)
+
+
+        console.log(polygon.canvas)
+        console.log(fbCanvas.viewportTransform)
+
+        fbCanvas.viewportTransform = fabric.util.composeMatrix({ translateX: 256, translateY: 256})
+
+        fbCanvas.requestRenderAll()
+
+        console.log(polygon.calcTransformMatrix())
+
+        
+
+        
+
+    </script>
+
+
+
+
+</body>
+
+</html>
