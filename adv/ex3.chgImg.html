@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>dummy object</title>
-  <script src="../libs/fabric.js" ></script>
+  <script src="../node_modules/fabric/dist/fabric.js" ></script>
 </head>
 <body>
 
@@ -14,7 +14,8 @@
 </div>
 
 
-<script>
+<script type="module">
+
 
   let fbCanvas =  new fabric.Canvas('main-canvas', {
     backgroundColor : '#a278ff',

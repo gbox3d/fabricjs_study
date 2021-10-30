@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>hierachy</title>
+  <!-- <script src="../libs/fabric.js"></script> -->
+  <script src="../node_modules/fabric/dist/fabric.js"></script>
+</head>
+
+<body>
+
+  <canvas id="main-canvas" width="256" height="256"></canvas>
+
+  <div>
+    <!-- <button id='test-1'> test1</button> -->
+  </div>
+
+
+  <script>
+
+    var canvas = new fabric.Canvas('main-canvas', {
+      backgroundColor: '#000000'
+    })
+
+    // create a rectangle object
+    var root = new fabric.Rect({
+      stroke: '#ff0000',
+      fill: 'rgba(0,0,0,0)',
+      width: 64,
+      height: 64
+    });
+
+    var child = new fabric.Rect({
+      stroke: '#ffff00',
+      left: 16,
+      top: 16,
+      width: 32,
+      height: 32
+    });
+
+
+    canvas.add(root, child);
+
+
+    //const multiply = fabric.util.multiplyTransformMatrices;
+    //const invert = fabric.util.invertTransform;
+
+
+    function addChild(parent, child) {
+
+      child.relationMatrix = fabric.util.multiplyTransformMatrices(
+        fabric.util.invertTransform(root.calcTransformMatrix()),
+        child.calcTransformMatrix()
+      );
+      child.parent = parent
+
+      if (parent.children)
+        parent.children.push(child)
+      else
+        parent.children = [child]
+
+    }
+
+    addChild(root, child)
+
+
+    function updateTransform(evt) {
+
+      //var _transform = fabric.util.composeMatrix({ translateX: x, translateY: y, angle: r })
+
+      //<!-- let o = child -->
+      let target = evt.transform.target
+
+      target.children.forEach(o => {
+        var newTransform = fabric.util.multiplyTransformMatrices(
+          o.parent.calcTransformMatrix(),
+          o.relationMatrix
+        );
+        fabric.util.applyTransformToObject(o, newTransform)
+        o.setCoords();
+
+      })
+
+
+
+      /*
+      opt = fabric.util.qrDecompose(newTransform);
+
+      o.set({
+        flipX: false,
+        flipY: false,
+      });
+      o.setPositionByOrigin(
+        { x: opt.translateX, y: opt.translateY },
+        'center',
+        'center'
+      );
+      o.set(opt);
+      */
+
+
+    }
+
+    root.on('moving', updateTransform)
+    root.on('rotating', updateTransform)
+    root.on('scaling', updateTransform)
+
+    function updateChildTransform(evt) {
+
+      let _target = evt.transform.target
+
+      //<!-- console.log(evt) -->
+      _target.relationMatrix = fabric.util.multiplyTransformMatrices(
+        fabric.util.invertTransform(child.parent.calcTransformMatrix()),
+        _target.calcTransformMatrix()
+      );
+
+
+    }
+    child.on('moving', updateChildTransform)
+    child.on('rotating', updateChildTransform)
+    child.on('scaling', updateChildTransform)
+
+
+
+  </script>
+
+
+
+
+</body>
+
+</html>

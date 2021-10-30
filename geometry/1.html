@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../node_modules/fabric/dist/fabric.js"></script>
+</head>
+
+<body>
+
+    <canvas id="main-canvas" width="512" height="512"></canvas>
+    <button id='test-1'> test1 </button>
+
+    <script>
+
+        var multiply = fabric.util.multiplyTransformMatrices;
+        var invert = fabric.util.invertTransform;
+
+        console.log(fabric.version)
+
+        var fbCanvas = new fabric.Canvas('main-canvas', {
+            backgroundColor: '#a278ff',
+            enableRetinaScaling: false //레티나 비활성화
+        })
+
+        var boss = new fabric.Rect(
+            { width: 150, height: 200, fill: 'red' });
+        var minion1 = new fabric.Rect(
+            { width: 40, height: 40, fill: 'blue' });
+
+        var bossTransform = boss.calcTransformMatrix();
+        var invertedBossTransform = invert(bossTransform);
+
+        console.log(minion1.calcTransformMatrix())
+
+        fbCanvas.add(boss, minion1);
+
+        let angle = 0
+        document.querySelector('#test-1').addEventListener('click', () => {
+
+            angle += 45;
+
+            var _transform = fabric.util.composeMatrix({ translateX: 128, translateY: 128, angle: angle })
+
+            o = minion1
+            opt = fabric.util.qrDecompose(_transform);
+            o.set({
+                flipX: false,
+                flipY: false,
+            });
+            o.setPositionByOrigin(
+                { x: opt.translateX, y: opt.translateY },
+                'center',
+                'center'
+            );
+            o.set(opt);
+            o.setCoords();
+            fbCanvas.requestRenderAll()
+
+        })
+
+
+    </script>
+
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ex 4</title>
+    <script src="../node_modules/fabric/dist/fabric.js"></script>
+</head>
+
+<body>
+
+    <canvas id="main-canvas" width="256" height="256"></canvas>
+
+    <div id="editor">
+
+        x : <input class="x" value="128">
+        y : <input class="y" value="92">
+        angle : <input class="angle" value="45">
+        scalex : <input class="scalex" value="1">
+        scaley : <input class="scaley" value="1">
+
+    </div>
+
+    <div>
+        <button id='test-1'> test1</button>
+        <button id='test-2'> test2</button>
+    </div>
+
+
+    <script>
+
+        var canvas = new fabric.Canvas('main-canvas', {
+            backgroundColor: '#000000'
+        })
+
+        // create a rectangle object
+        var root = new fabric.Rect({
+            stroke: '#ff0000',
+            fill: 'rgba(0,0,0,0)',
+            width: 64,
+            height: 64
+        });
+        canvas.add(root);
+
+        
+        document.querySelector('#test-1').addEventListener('click', (evt) => {
+
+            let _root = document.querySelector('#editor');
+
+            let _x = parseInt(_root.children[0].value)
+            let _y = parseInt(_root.children[1].value)
+            let _angle = parseInt(_root.children[2].value)
+            let _scalex = parseFloat(_root.children[3].value)
+            let _scaley = parseFloat(_root.children[3].value)
+
+
+            var newTransform = fabric.util.composeMatrix({ translateX: _x, translateY: _y, angle: _angle,scaleX : _scalex,scaleY : _scaley })
+
+            //newTransform = multiply(newTransform,_rot)
+
+            fabric.util.applyTransformToObject(root, newTransform)
+
+            root.setCoords();
+
+            canvas.requestRenderAll()
+        });
+
+
+    </script>
+
+
+
+
+</body>
+
+</html>
