@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <title>read image example</title>
-  <script src="../libs/fabric.js"></script>
+  <script src="../../node_modules/fabric/dist/fabric.js"></script>
 </head>
 
 <body>
@@ -28,36 +28,29 @@
       preserveObjectStacking: true //선택한 오브잭트 현재 z 순서  유지
     });
 
-    let testObj;
-
-    fabric.Image.fromURL('../res/sana.jpg', ((object) => {
-
+    fabric.Image.fromURL('../../res/sana.jpg', ((object) => {
       console.log(object);
-      testObj = object
       object.set("left", 10)
       object.set("top", 20)
-      // object.set("selectable",false)
       object.set("scaleX", 0.5)
       object.set("scaleY", 0.5)
-
+      object.set('id','image-001')
       //크기 구하기
       console.log(object.get("width"), object.get("height"))
-      // // object.set("width",256)
-      // // object.set("height",256);
-      //object.setCoords()
       fbCanvas.add(object);
-
     }));
 
 
-    fabric.util.getById('test-1').addEventListener('click', evt => {
+    document.querySelector('#test-1').addEventListener('click', evt => {
 
       //이미지를 파일로 부터 로딩 loadImage 함수는 img element 객체를 콜백한다.
-      fabric.util.loadImage('../res/dprk2.jpg', _img => {
-
+      fabric.util.loadImage('../../res/dprk2.jpg', _img => {
         //img element적용
         console.log(_img)
-        testObj.setElement(_img).setCoords()
+        
+        let imgObject = fbCanvas.getObjects().filter(o=>o.id === 'image-001')
+        imgObject[0].setElement(_img).setCoords()
+
         fbCanvas.renderAll();
 
       })

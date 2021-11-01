@@ -80,26 +80,7 @@
         fabric.util.applyTransformToObject(o, newTransform)
         o.setCoords();
 
-      })
-
-
-
-      /*
-      opt = fabric.util.qrDecompose(newTransform);
-
-      o.set({
-        flipX: false,
-        flipY: false,
       });
-      o.setPositionByOrigin(
-        { x: opt.translateX, y: opt.translateY },
-        'center',
-        'center'
-      );
-      o.set(opt);
-      */
-
-
     }
 
     root.on('moving', updateTransform)
@@ -110,20 +91,17 @@
 
       let _target = evt.transform.target
 
-      //<!-- console.log(evt) -->
+      //console.log(evt)
       _target.relationMatrix = fabric.util.multiplyTransformMatrices(
         fabric.util.invertTransform(child.parent.calcTransformMatrix()),
         _target.calcTransformMatrix()
       );
-
-
     }
+
     child.on('moving', updateChildTransform)
     child.on('rotating', updateChildTransform)
     child.on('scaling', updateChildTransform)
-
-
-
+    
   </script>
 
 

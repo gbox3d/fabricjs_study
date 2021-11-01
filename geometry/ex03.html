@@ -21,67 +21,143 @@
 
         const fbCanvas = new fabric.Canvas('main-canvas', {
             backgroundColor: '#000',
+            preserveObjectStacking: true,
             enableRetinaScaling: false //레티나 비활성화
         })
-        fbCanvas.viewportTransform = fabric.util.composeMatrix({ translateX: 256, translateY: 256})
+        fbCanvas.viewportTransform = fabric.util.composeMatrix({ translateX: 256, translateY: 256 })
 
-        document.addEventListener('keydown', (evt) => {
-            console.log(evt)
-            switch(evt.key) {
-                case 'q': //정점 정보 리스팅
-                console.log(polygon.points)
-                break;
-            }
-        })
+        let imgObject = new fabric.Image()
+        fbCanvas.add(imgObject);
 
-        var points = [{
-            x: -64, y: 0
-        }, {
-            x: 0, y: -64
-        },
+
+        //십자선 
         {
-            x: 64, y: 0
-        }]
-
-        var polygon = new fabric.Polygon(points, {
-            left: 0,
-            top: 0,
-            fill: 'transparent',
-            strokeWidth: 2,
-            stroke: '#ffff00',
-            //scaleX: 4,
-            //scaleY: 4,
-            objectCaching: false,
-            transparentCorners: false,
-            cornerColor: 'blue',
-        });
-        fbCanvas.add(polygon)
-
-        {
-            fbCanvas.add(new fabric.Line([-256,0,256,0], {
+            fbCanvas.add(new fabric.Line([-256, 0, 256, 0], {
                 //fill: 'red',
                 stroke: '#0f0',
                 strokeWidth: 2,
                 selectable: false,
                 evented: false,
-              }));
-              fbCanvas.add(new fabric.Line([0,-256,0,256], {
+            }));
+            fbCanvas.add(new fabric.Line([0, -256, 0, 256], {
                 //fill: 'red',
                 stroke: '#0f0',
                 strokeWidth: 2,
                 selectable: false,
                 evented: false,
-              }))
-            
+            }))
+
         }
 
-        console.log(fbCanvas.getObjects())
+        //계층적 변환 관련 함수
+        function updateRelation(evt) {
+            let obj = evt.transform.target
+            obj.relationMatrix = fabric.util.multiplyTransformMatrices(
+                fabric.util.invertTransform(obj.parent.calcTransformMatrix()),
+                obj.calcTransformMatrix()
+            );
+        }
+
+        function updateRootTransform(evt) {
+            let target = evt.transform.target
+            target.children.forEach(o => {
+                if (o.relationMatrix) {
+                    let newTransform = fabric.util.multiplyTransformMatrices(
+                        o.parent.calcTransformMatrix(),
+                        o.relationMatrix
+                    );
+                    fabric.util.applyTransformToObject(o, newTransform)
+                    o.setCoords();
+                }
+            });
+        }
+
+        //폴리건 에디팅 관련 메소드
+        // define a function that can locate the controls.
+        // this function will be used both for drawing and for interaction.
+        function polygonPositionHandler(dim, finalMatrix, fabricObject) {
+            var x = (fabricObject.points[this.pointIndex].x - fabricObject.pathOffset.x),
+                y = (fabricObject.points[this.pointIndex].y - fabricObject.pathOffset.y);
+            return fabric.util.transformPoint(
+                { x: x, y: y },
+                fabric.util.multiplyTransformMatrices(
+                    fabricObject.canvas.viewportTransform,
+                    fabricObject.calcTransformMatrix()
+                )
+            );
+        }
+
+        // define a function that will define what the control does
+        // this function will be called on every mouse move after a control has been
+        // clicked and is being dragged.
+        // The function receive as argument the mouse event, the current trasnform object
+        // and the current position in canvas coordinate
+        // transform.target is a reference to the current object being transformed,
+        function actionHandler(eventData, transform, x, y) {
+            var polygon = transform.target,
+                currentControl = polygon.controls[polygon.__corner],
+                mouseLocalPosition = polygon.toLocalPoint(new fabric.Point(x, y), 'center', 'center'),
+                polygonBaseSize = polygon._getNonTransformedDimensions(),
+                size = polygon._getTransformedDimensions(0, 0),
+                finalPointPosition = {
+                    x: mouseLocalPosition.x * polygonBaseSize.x / size.x + polygon.pathOffset.x,
+                    y: mouseLocalPosition.y * polygonBaseSize.y / size.y + polygon.pathOffset.y
+                };
+            polygon.points[currentControl.pointIndex] = finalPointPosition;
+            return true;
+        }
+
+        // define a function that can keep the polygon in the same position when we change its
+        // width/height/top/left.
+        function anchorWrapper(anchorIndex, fn) {
+            return function (eventData, transform, x, y) {
+                var fabricObject = transform.target,
+                    absolutePoint = fabric.util.transformPoint({
+                        x: (fabricObject.points[anchorIndex].x - fabricObject.pathOffset.x),
+                        y: (fabricObject.points[anchorIndex].y - fabricObject.pathOffset.y),
+                    }, fabricObject.calcTransformMatrix()),
+                    actionPerformed = fn(eventData, transform, x, y),
+                    newDim = fabricObject._setPositionDimensions({}),
+                    polygonBaseSize = fabricObject._getNonTransformedDimensions(),
+                    newX = (fabricObject.points[anchorIndex].x - fabricObject.pathOffset.x) / polygonBaseSize.x,
+                    newY = (fabricObject.points[anchorIndex].y - fabricObject.pathOffset.y) / polygonBaseSize.y;
+                fabricObject.setPositionByOrigin(absolutePoint, newX + 0.5, newY + 0.5);
+                updateRelation({ transform: { target: fabricObject } })
+
+                return actionPerformed;
+            }
+        }
+
+
+        function setupEdit(object) {
+            // clone what are you copying since you
+            // may want copy and paste on different moment.
+            // and you do not want the changes happened
+            // later to reflect on the copy.
+            var poly = object
+            //fbCanvas.setActiveObject(poly);
+
+            var lastControl = poly.points.length - 1;
+            poly.cornerStyle = 'circle';
+            poly.cornerColor = 'rgba(0,0,255)';
+            poly.controls = poly.points.reduce(function (acc, point, index) {
+                acc['p' + index] = new fabric.Control({
+                    positionHandler: polygonPositionHandler,
+                    actionHandler: anchorWrapper(index > 0 ? index - 1 : lastControl, actionHandler),
+                    actionName: 'modifyPolygon',
+                    pointIndex: index
+                });
+                return acc;
+            }, {});
+
+            poly.hasBorders = false;
+        }
 
         async function main() {
 
             let resp = await fetch("http://ubiqos001.iptime.org:21030/api/v2/webdisk/readFile", {
-                method : 'POST',
-                body : '/home/gbox3d/work/dataset/fruts_nuts\ntrainval.json',
+                method: 'POST',
+                body: '/home/gbox3d/work/dataset/fruts_nuts\ntrainval.json',
                 //body : '/home/gbox3d/work/dataset/fruts_nuts',
                 headers: new Headers({
                     "Content-Type": 'application/text'
@@ -89,17 +165,105 @@
             })
 
             console.log(resp)
-            if(resp.ok) {
-                let  _coco_json = await resp.json()
+            if (resp.ok) {
+                let _coco_json = await resp.json()
                 console.log(_coco_json)
+
+                {
+                    let _imgData = _coco_json.images[0]
+                    console.log(_imgData)
+
+                    let resp = await fetch("http://ubiqos001.iptime.org:21030/api/v2/webdisk/readFile", {
+                        method: 'POST',
+                        body: ['/home/gbox3d/work/dataset/fruts_nuts/images', `${_imgData.file_name}`].join('\n'),
+                        //body : '/home/gbox3d/work/dataset/fruts_nuts',
+                        headers: new Headers({
+                            "Content-Type": 'application/text'
+                        })
+                    })
+
+                    console.log(resp)
+                    if (resp.ok) {
+
+                        let responseAsBlob = await resp.blob() //바이너리 원본데이터얻기 
+                        let imgUrl = URL.createObjectURL(responseAsBlob); //url 객체로 변환
+
+                        let _imgElem = await new Promise((resolve, reject) => {
+                            /*fabric.Image.fromURL(imgUrl, ((object) => {
+                                console.log(object);
+                                resolve(object)
+                            }));*/
+                            fabric.util.loadImage(imgUrl, (_img) => {
+                                resolve(_img)
+                            })
+                        })
+                        imgObject.setElement(_imgElem)
+
+                        //원점 으로 위치변환 
+                        fabric.util.applyTransformToObject(imgObject, fabric.util.composeMatrix({}))
+                        imgObject.setCoords();
+                        imgObject.children = []
+
+                        //create segmentation
+                        _coco_json.annotations.filter(o => o.image_id === _imgData.id).forEach(anno => {
+
+                            console.log(anno)
+
+                            let segms = anno.segmentation
+
+                            segms.forEach(segm => {
+                                var points = []
+
+                                for (let i = 0; i < segm.length; i += 2) {
+                                    points.push(new fabric.Point(segm[i], segm[i + 1]))
+                                }
+
+                                console.log(points);
+
+                                var polygon = new fabric.Polygon(points, {
+                                    fill: 'transparent',
+                                    strokeWidth: 2,
+                                    stroke: '#ffff00',
+                                    objectCaching: false,
+                                    transparentCorners: false,
+                                    cornerColor: 'blue',
+                                });
+                                polygon.parent = imgObject
+                                fabric.util.applyTransformToObject(polygon, fabric.util.composeMatrix({
+                                    translateX: -(_imgData.width / 2 - polygon.pathOffset.x),
+                                    translateY: -(_imgData.height / 2 - polygon.pathOffset.y)
+                                }))
+                                polygon.setCoords()
+                                fbCanvas.add(polygon)
+                                imgObject.children.push(polygon);
+                                polygon.on('moving', updateRelation)
+                                updateRelation({ transform: { target: polygon } })
+                                setupEdit(polygon)
+                            });
+                        });
+
+                        imgObject.on('moving', updateRootTransform)
+                        imgObject.on('rotating', updateRootTransform)
+                        imgObject.on('scaling', updateRootTransform)
+                    }
+                    fbCanvas.requestRenderAll();
+                }
             }
 
+            document.addEventListener('keydown', (evt) => {
+                console.log(evt)
+                switch (evt.key) {
+                    case 'q': //정점 정보 리스팅
+                        console.log(polygon)
+                        break;
+                }
+            });
         }
 
-       main()
+        main()
         //fabric.Intersection.intersectPolygonPolygon
 
-        
+
 
     </script>
 
