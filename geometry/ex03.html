@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title> ex02 </title>
+    <title> fabrics geometry </title>
     <script src="../node_modules/fabric/dist/fabric.js"></script>
 
     <style>
@@ -23,6 +23,7 @@
             backgroundColor: '#000',
             enableRetinaScaling: false //레티나 비활성화
         })
+        fbCanvas.viewportTransform = fabric.util.composeMatrix({ translateX: 256, translateY: 256})
 
         document.addEventListener('keydown', (evt) => {
             console.log(evt)
@@ -30,33 +31,16 @@
                 case 'q': //정점 정보 리스팅
                 console.log(polygon.points)
                 break;
-                case 'w':
-                {
-                    //console.log(polygon._getNonTransformedDimensions())
-                    let baseSize = polygon._getNonTransformedDimensions()
-                    
-                    var newTransform = fabric.util.composeMatrix({translateX : -baseSize.x/4,translateX : -baseSize.y/4})
-                    //console.log(newTransform)
-                    fabric.util.applyTransformToObject(polygon,newTransform)
-                    polygon.setCoords()
-                    fbCanvas.requestRenderAll()
-                    console.log(polygon.calcTransformMatrix())
-                }
-                
-                break;
             }
         })
 
         var points = [{
-            x: 0, y: 0
+            x: -64, y: 0
         }, {
-            x: 128, y: 0
+            x: 0, y: -64
         },
         {
-            x: 96, y: 64
-        }
-            , {
-            x: 0, y: 128
+            x: 64, y: 0
         }]
 
         var polygon = new fabric.Polygon(points, {
@@ -72,16 +56,6 @@
             cornerColor: 'blue',
         });
         fbCanvas.add(polygon)
-
-
-        console.log(polygon.canvas)
-        console.log(fbCanvas.viewportTransform)
-
-        fbCanvas.viewportTransform = fabric.util.composeMatrix({ translateX: 256, translateY: 256})
-
-        fbCanvas.requestRenderAll()
-
-        console.log(polygon.calcTransformMatrix())
 
         {
             fbCanvas.add(new fabric.Line([-256,0,256,0], {
@@ -101,7 +75,29 @@
             
         }
 
-        
+        console.log(fbCanvas.getObjects())
+
+        async function main() {
+
+            let resp = await fetch("http://ubiqos001.iptime.org:21030/api/v2/webdisk/readFile", {
+                method : 'POST',
+                body : '/home/gbox3d/work/dataset/fruts_nuts\ntrainval.json',
+                //body : '/home/gbox3d/work/dataset/fruts_nuts',
+                headers: new Headers({
+                    "Content-Type": 'application/text'
+                })
+            })
+
+            console.log(resp)
+            if(resp.ok) {
+                let  _coco_json = await resp.json()
+                console.log(_coco_json)
+            }
+
+        }
+
+       main()
+        //fabric.Intersection.intersectPolygonPolygon
 
         
 
