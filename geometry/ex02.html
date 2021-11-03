@@ -19,31 +19,47 @@
 
     <script type="module">
 
+        import { setupEdit, clearEdit, makeAbsoluteBBox } from './utils.js'
+
         const fbCanvas = new fabric.Canvas('main-canvas', {
             backgroundColor: '#000',
             enableRetinaScaling: false //레티나 비활성화
         })
+        //뷰 트랜스폼 변환
+        fbCanvas.viewportTransform = fabric.util.composeMatrix({ translateX: 256, translateY: 256 })
+
 
         document.addEventListener('keydown', (evt) => {
             console.log(evt)
-            switch(evt.key) {
+            switch (evt.key) {
                 case 'q': //정점 정보 리스팅
-                console.log(polygon.points)
-                break;
+                    console.log(polygon.points)
+                    break;
                 case 'w':
-                {
-                    //console.log(polygon._getNonTransformedDimensions())
-                    let baseSize = polygon._getNonTransformedDimensions()
-                    
-                    var newTransform = fabric.util.composeMatrix({translateX : -baseSize.x/4,translateX : -baseSize.y/4})
-                    //console.log(newTransform)
-                    fabric.util.applyTransformToObject(polygon,newTransform)
-                    polygon.setCoords()
-                    fbCanvas.requestRenderAll()
-                    console.log(polygon.calcTransformMatrix())
-                }
-                
-                break;
+                    {
+                        //console.log(polygon._getNonTransformedDimensions())
+                        let baseSize = polygon._getNonTransformedDimensions()
+
+                        var newTransform = fabric.util.composeMatrix({ translateX: -baseSize.x / 4, translateX: -baseSize.y / 4 })
+                        //console.log(newTransform)
+                        fabric.util.applyTransformToObject(polygon, newTransform)
+                        polygon.setCoords()
+                        fbCanvas.requestRenderAll()
+                        console.log(polygon.calcTransformMatrix())
+                    }
+                    break;
+                case 'e':
+                    {
+                        setupEdit(polygon)
+                        fbCanvas.requestRenderAll()
+                    }
+                    break;
+                case 'r':
+                    {
+                        clearEdit(polygon)
+                        fbCanvas.requestRenderAll()
+                    }
+                    break;
             }
         })
 
@@ -60,8 +76,6 @@
         }]
 
         var polygon = new fabric.Polygon(points, {
-            left: 0,
-            top: 0,
             fill: 'transparent',
             strokeWidth: 2,
             stroke: '#ffff00',
@@ -71,40 +85,64 @@
             transparentCorners: false,
             cornerColor: 'blue',
         });
+
+        fabric.util.applyTransformToObject(polygon, fabric.util.composeMatrix({
+            translateX: 0,
+            translateY: 0
+        }));
+
+
         fbCanvas.add(polygon)
 
 
         console.log(polygon.canvas)
         console.log(fbCanvas.viewportTransform)
 
-        //뷰 트랜스폼 변환
-        fbCanvas.viewportTransform = fabric.util.composeMatrix({ translateX: 256, translateY: 256})
 
         fbCanvas.requestRenderAll()
 
-        console.log(polygon.calcTransformMatrix())
+        fbCanvas.on('after:render', (evt) => {
+            //let ctx = this.fbCanvas.contextContainer
+            let ctx = evt.ctx
+            if (ctx) {
+                ctx.strokeStyle = '#0f0';
+                ctx.beginPath();
+                ctx.moveTo(0, 256);
+                ctx.lineTo(512, 256);
+                ctx.closePath()
+                ctx.stroke()
 
-        {
-            fbCanvas.add(new fabric.Line([-256,0,256,0], {
-                //fill: 'red',
-                stroke: '#0f0',
-                strokeWidth: 2,
-                selectable: false,
-                evented: false,
-              }));
-              fbCanvas.add(new fabric.Line([0,-256,0,256], {
-                //fill: 'red',
-                stroke: '#0f0',
-                strokeWidth: 2,
-                selectable: false,
-                evented: false,
-              }))
-            
-        }
+                ctx.beginPath();
+                ctx.moveTo(256, 0);
+                ctx.lineTo(256, 512);
+                ctx.closePath()
+                ctx.stroke()
 
-        
+                var bound = polygon.getBoundingRect();
+                ctx.strokeStyle = '#fff';
 
-        
+                ctx.strokeRect(
+                    bound.left,
+                    bound.top,
+                    bound.width,
+                    bound.height
+                );
+
+                ctx.strokeStyle = '#f00';
+                let _abbox = makeAbsoluteBBox(polygon)
+                ctx.strokeRect(
+                    _abbox.xmin + 256,
+                    _abbox.ymin + 256,
+                    _abbox.xmax - _abbox.xmin,
+                    _abbox.ymax - _abbox.ymin
+                );
+            }
+        });
+
+        //console.log(polygon.calcTransformMatrix())
+
+
+
 
     </script>
 

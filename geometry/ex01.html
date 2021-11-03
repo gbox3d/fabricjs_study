@@ -100,7 +100,7 @@
 
         */
 
-        import {setupEdit} from './utils.js'
+        import { setupEdit } from './utils.js'
 
         const fbCanvas = new fabric.Canvas('main-canvas', {
             backgroundColor: '#000',
@@ -109,30 +109,30 @@
 
         document.addEventListener('keydown', (evt) => {
             console.log(evt)
-            switch(evt.key) {
+            switch (evt.key) {
                 case 'q': //정점 정보 리스팅
-                console.log(polygon.points)
-                break;
+                    console.log(polygon.points)
+                    break;
 
                 case 'w': //정점 추가 
-                polygon.points.push({
-                    x: 32, y: 32
-                })
-                setupEdit(polygon)
-                fbCanvas.requestRenderAll();
-                break;
+                    polygon.points.push({
+                        x: 32, y: 32
+                    })
+                    setupEdit(polygon)
+                    fbCanvas.requestRenderAll();
+                    break;
 
                 case 'e': //정점 절대 좌표구하기 
-                {
-                    let absolutePoint = fabric.util.transformPoint({
-                        x: (polygon.points[0].x - polygon.pathOffset.x),
-                        y: (polygon.points[0].y - polygon.pathOffset.y),
-                    }, polygon.calcTransformMatrix())
+                    {
+                        let absolutePoint = fabric.util.transformPoint({
+                            x: (polygon.points[0].x - polygon.pathOffset.x),
+                            y: (polygon.points[0].y - polygon.pathOffset.y),
+                        }, polygon.calcTransformMatrix())
 
-                    console.log(absolutePoint)
-                }
-                
-                break;
+                        console.log(absolutePoint)
+                    }
+
+                    break;
             }
         })
 
@@ -183,6 +183,18 @@
             ctx.lineTo(256, 512);
             ctx.closePath()
             ctx.stroke()
+
+            var bound = polygon.getBoundingRect();
+
+            ctx.strokeRect(
+                bound.left,
+                bound.top,
+                bound.width,
+                bound.height
+            );
+
+
+
 
             //console.log(evt)
         });

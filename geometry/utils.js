@@ -108,6 +108,12 @@ function setupEdit(object) {
     poly.hasBorders = false;
 }
 
+function clearEdit(object) {
+    object.cornerColor = 'blue';
+    object.cornerStyle = 'rect';
+    object.controls = fabric.Object.prototype.controls;
+}
+
 function makeAbsoluteBBox(obj) {
     let _xs = []
     let _ys = []
@@ -144,4 +150,4 @@ function makeAbsolutePoints(obj) {
 
 }
 
-export { setupEdit, updateRootTransform, updateRelation, makeAbsoluteBBox, makeAbsolutePoints }
+export { setupEdit, clearEdit,updateRootTransform, updateRelation, makeAbsoluteBBox, makeAbsolutePoints }
