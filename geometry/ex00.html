@@ -57,26 +57,27 @@
         });
         fbCanvas.add(polygon)
 
-        {
-            fbCanvas.add(new fabric.Line([-256,0,256,0], {
-                //fill: 'red',
-                stroke: '#0f0',
-                strokeWidth: 2,
-                selectable: false,
-                evented: false,
-              }));
-              fbCanvas.add(new fabric.Line([0,-256,0,256], {
-                //fill: 'red',
-                stroke: '#0f0',
-                strokeWidth: 2,
-                selectable: false,
-                evented: false,
-              }))
-            
-        }
+        console.log(fbCanvas.getObjects());
 
-        console.log(fbCanvas.getObjects())
-        
+        fbCanvas.on('after:render', (evt) => {
+            //let ctx = this.fbCanvas.contextContainer
+            let ctx = evt.ctx
+
+            ctx.strokeStyle = '#0f0';
+            ctx.beginPath();
+            ctx.moveTo(0, 256);
+            ctx.lineTo(512, 256);
+            ctx.closePath()
+            ctx.stroke()
+
+            ctx.beginPath();
+            ctx.moveTo(256, 0);
+            ctx.lineTo(256, 512);
+            ctx.closePath()
+            ctx.stroke()
+
+            //console.log(evt)
+        });
 
     </script>
 

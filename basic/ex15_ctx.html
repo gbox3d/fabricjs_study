@@ -22,17 +22,38 @@
         //직접 ctx 접근하기 
         fbCanvas.on('after:render', (evt) => {
 
+            //https://developer.mozilla.org/ko/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes
+
+
             let ctx = this.fbCanvas.contextContainer
 
             ctx.strokeStyle = '#f00';
             ctx.strokeRect(32,32,64,64)
 
+            ctx.beginPath();
+            ctx.arc(128, 64, 32, 0, 2 * Math.PI);
+            ctx.closePath()
+            ctx.stroke();
+
             ctx.strokeStyle = '#0f0';
             ctx.beginPath();
             ctx.moveTo(0, 128);
-            ctx.lineTo(128, 128);
+            ctx.lineTo(256, 128);
             ctx.closePath()
             ctx.stroke()
+
+            ctx.beginPath();
+            ctx.moveTo(128, 0);
+            ctx.lineTo(128, 256);
+            ctx.closePath()
+            ctx.stroke()
+
+            ctx.fillStyle = 'blue';
+            ctx.fillRect(128, 128, 32, 32);
+
+            ctx.fillStyle = '#ff0';
+            ctx.font = '16px serif';
+            ctx.fillText('Hello world', 10, 50);
 
         });
 

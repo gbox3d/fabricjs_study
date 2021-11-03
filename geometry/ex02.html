@@ -77,6 +77,7 @@
         console.log(polygon.canvas)
         console.log(fbCanvas.viewportTransform)
 
+        //뷰 트랜스폼 변환
         fbCanvas.viewportTransform = fabric.util.composeMatrix({ translateX: 256, translateY: 256})
 
         fbCanvas.requestRenderAll()

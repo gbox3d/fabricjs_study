@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>ex01</title>
-    <script src="../node_modules/fabric/dist/fabric.js"></script>
+    <script src="../node_modules/fabric/dist/fabric.min.js"></script>
 
     <style>
         .hide {
@@ -19,66 +19,7 @@
 
     <script type="module">
 
-        const fbCanvas = new fabric.Canvas('main-canvas', {
-            backgroundColor: '#000',
-            enableRetinaScaling: false //레티나 비활성화
-        })
-
-        document.addEventListener('keydown', (evt) => {
-            console.log(evt)
-            switch(evt.key) {
-                case 'q': //정점 정보 리스팅
-                console.log(polygon.points)
-                break;
-
-                case 'w': //정점 추가 
-                polygon.points.push({
-                    x: 32, y: 32
-                })
-                setupEdit(polygon)
-                fbCanvas.requestRenderAll();
-                break;
-
-                case 'e': //정점 절대 좌표구하기 
-                {
-                    let absolutePoint = fabric.util.transformPoint({
-                        x: (polygon.points[0].x - polygon.pathOffset.x),
-                        y: (polygon.points[0].y - polygon.pathOffset.y),
-                    }, polygon.calcTransformMatrix())
-
-                    console.log(absolutePoint)
-                }
-                
-                break;
-            }
-        })
-
-        var points = [{
-            x: 0, y: 0
-        }, {
-            x: 128, y: 0
-        },
-        {
-            x: 96, y: 64
-        }
-            , {
-            x: 0, y: 128
-        }]
-
-        var polygon = new fabric.Polygon(points, {
-            left: 100,
-            top: 50,
-            fill: 'transparent',
-            strokeWidth: 2,
-            stroke: '#ffff00',
-            //scaleX: 4,
-            //scaleY: 4,
-            objectCaching: false,
-            transparentCorners: false,
-            cornerColor: 'blue',
-        });
-        fbCanvas.add(polygon)
-
+        /*
         // define a function that can locate the controls.
         // this function will be used both for drawing and for interaction.
         function polygonPositionHandler(dim, finalMatrix, fabricObject) {
@@ -157,11 +98,94 @@
             poly.hasBorders = false;
         }
 
+        */
+
+        import {setupEdit} from './utils.js'
+
+        const fbCanvas = new fabric.Canvas('main-canvas', {
+            backgroundColor: '#000',
+            enableRetinaScaling: false //레티나 비활성화
+        })
+
+        document.addEventListener('keydown', (evt) => {
+            console.log(evt)
+            switch(evt.key) {
+                case 'q': //정점 정보 리스팅
+                console.log(polygon.points)
+                break;
+
+                case 'w': //정점 추가 
+                polygon.points.push({
+                    x: 32, y: 32
+                })
+                setupEdit(polygon)
+                fbCanvas.requestRenderAll();
+                break;
+
+                case 'e': //정점 절대 좌표구하기 
+                {
+                    let absolutePoint = fabric.util.transformPoint({
+                        x: (polygon.points[0].x - polygon.pathOffset.x),
+                        y: (polygon.points[0].y - polygon.pathOffset.y),
+                    }, polygon.calcTransformMatrix())
+
+                    console.log(absolutePoint)
+                }
+                
+                break;
+            }
+        })
+
+        var points = [{
+            x: 0, y: 0
+        }, {
+            x: 128, y: 0
+        },
+        {
+            x: 96, y: 64
+        }
+            , {
+            x: 0, y: 128
+        }]
+
+        var polygon = new fabric.Polygon(points, {
+            left: 100,
+            top: 50,
+            fill: 'transparent',
+            strokeWidth: 2,
+            stroke: '#ffff00',
+            //scaleX: 4,
+            //scaleY: 4,
+            objectCaching: false,
+            transparentCorners: false,
+            cornerColor: 'blue',
+        });
+        fbCanvas.add(polygon)
+
         setupEdit(polygon)
 
         fbCanvas.setActiveObject(polygon)
         fbCanvas.requestRenderAll()
-        
+
+        fbCanvas.on('after:render', (evt) => {
+            //let ctx = this.fbCanvas.contextContainer
+            let ctx = evt.ctx
+
+            ctx.strokeStyle = '#0f0';
+            ctx.beginPath();
+            ctx.moveTo(0, 256);
+            ctx.lineTo(512, 256);
+            ctx.closePath()
+            ctx.stroke()
+
+            ctx.beginPath();
+            ctx.moveTo(256, 0);
+            ctx.lineTo(256, 512);
+            ctx.closePath()
+            ctx.stroke()
+
+            //console.log(evt)
+        });
 
     </script>
 
