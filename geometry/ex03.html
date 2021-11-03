@@ -230,8 +230,8 @@
                                 });
                                 polygon.parent = imgObject
                                 fabric.util.applyTransformToObject(polygon, fabric.util.composeMatrix({
-                                    translateX: -(_imgData.width / 2 - polygon.pathOffset.x),
-                                    translateY: -(_imgData.height / 2 - polygon.pathOffset.y)
+                                    translateX: -(imgObject.width / 2 - polygon.pathOffset.x),
+                                    translateY: -(imgObject.height / 2 - polygon.pathOffset.y)
                                 }))
                                 polygon.setCoords()
                                 fbCanvas.add(polygon)

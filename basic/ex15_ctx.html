@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>access canvas ctx</title>
+    <script src="../node_modules/fabric/dist/fabric.js"></script>
+</head>
+
+<body>
+
+    <canvas id="main-canvas" width="256" height="256"></canvas>
+
+    <script>
+        console.log(fabric.version)
+
+        var fbCanvas = new fabric.Canvas('main-canvas', {
+            backgroundColor: '#a278ff',
+            enableRetinaScaling: false //레티나 비활성화
+        })
+
+        //직접 ctx 접근하기 
+        fbCanvas.on('after:render', (evt) => {
+
+            let ctx = this.fbCanvas.contextContainer
+
+            ctx.strokeStyle = '#f00';
+            ctx.strokeRect(32,32,64,64)
+
+            ctx.strokeStyle = '#0f0';
+            ctx.beginPath();
+            ctx.moveTo(0, 128);
+            ctx.lineTo(128, 128);
+            ctx.closePath()
+            ctx.stroke()
+
+        });
+
+
+
+    </script>
+
+
+
+
+</body>
+
+</html>
