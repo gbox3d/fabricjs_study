@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title> fabrics geometry </title>
+    <title> fabrics geometry intersect poly  </title>
     <script src="../node_modules/fabric/dist/fabric.js"></script>
 
     <style>
@@ -20,6 +20,8 @@
     <script type="module">
 
         //https://velog.io/@fivewinds/fabricjs%EC%97%90%EC%84%9C-%EB%91%90-Polygon%EA%B0%9C%EC%B2%B4%EA%B0%80-%EA%B5%90%EC%B0%A8%ED%95%98%EB%8A%94%EC%A7%80-%ED%8C%90%EB%B3%84%ED%95%98%EA%B8%B0
+
+        import { makeAbsolutePoints } from './utils.js'
 
         const fbCanvas = new fabric.Canvas('main-canvas', {
             backgroundColor: '#000',
@@ -46,8 +48,6 @@
         }]
 
         var polygon = new fabric.Polygon(points, {
-            left: 0,
-            top: 0,
             fill: 'transparent',
             strokeWidth: 2,
             stroke: '#ffff00',
@@ -57,11 +57,11 @@
             transparentCorners: false,
             cornerColor: 'blue',
         });
+        fabric.util.applyTransformToObject(polygon, fabric.util.composeMatrix({}))
         fbCanvas.add(polygon)
 
         var polygon2 = new fabric.Polygon(points, {
-            left: 64,
-            top: 32,
+
             fill: 'transparent',
             strokeWidth: 2,
             stroke: '#ffff00',
@@ -71,24 +71,11 @@
             transparentCorners: false,
             cornerColor: 'blue',
         });
+        fabric.util.applyTransformToObject(polygon2, fabric.util.composeMatrix({
+            translateX: 64,
+            translateY: 32
+        }));
         fbCanvas.add(polygon2)
-
-        {
-            fbCanvas.add(new fabric.Line([-256, 0, 256, 0], {
-                //fill: 'red',
-                stroke: '#0f0',
-                strokeWidth: 2,
-                selectable: false,
-                evented: false,
-            }));
-            fbCanvas.add(new fabric.Line([0, -256, 0, 256], {
-                //fill: 'red',
-                stroke: '#0f0',
-                strokeWidth: 2,
-                selectable: false,
-                evented: false,
-            }))
-        }
 
         //절대 좌표 구하기 
         function convertAbsolutePoint(area) {
@@ -96,6 +83,7 @@
                 .map(p => fabric.util.transformPoint({ x: p.x - area.pathOffset.x, y: p.y - area.pathOffset.y }, area.calcTransformMatrix()));
         }
 
+        /*
         function updateIntersect() {
 
             circles.forEach(_ => {
@@ -121,9 +109,40 @@
         let circles = []
         polygon.on('moving', updateIntersect)
         polygon.on('rotating', updateIntersect)
+        */
 
-        console.log(fbCanvas.getObjects())
+        //console.log(fbCanvas.getObjects())
 
+        fbCanvas.on('after:render', (evt) => {
+            let ctx = evt.ctx
+            if (ctx) {
+                ctx.strokeStyle = '#0f0';
+                ctx.beginPath();
+                ctx.moveTo(0, 256);
+                ctx.lineTo(512, 256);
+                ctx.closePath()
+                ctx.stroke()
+
+                ctx.beginPath();
+                ctx.moveTo(256, 0);
+                ctx.lineTo(256, 512);
+                ctx.closePath()
+                ctx.stroke()
+
+                //교점구하기 
+                var intersect = fabric.Intersection.intersectPolygonPolygon(makeAbsolutePoints(polygon), makeAbsolutePoints(polygon2));
+                if (intersect.status === "Intersection") {
+                    intersect.points.forEach(pt => {
+                        let _pt = fabric.util.transformPoint(pt, fbCanvas.viewportTransform)
+                        ctx.strokeStyle = '#f00';
+                        ctx.beginPath();
+                        ctx.arc(_pt.x, _pt.y, 8, 0, 2 * Math.PI);
+                        ctx.closePath()
+                        ctx.stroke();
+                    })
+                }
+            }
+        });
     </script>
 
 

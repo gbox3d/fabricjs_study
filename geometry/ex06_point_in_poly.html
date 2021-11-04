@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title> fabrics geometry pt in poly </title>
+    <script src="../node_modules/fabric/dist/fabric.js"></script>
+
+    <style>
+        .hide {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="main-canvas" width="512" height="512"></canvas>
+
+    <script type="module">
+
+        import { pointInPolygon, makeAbsolutePoints } from './utils.js'
+
+
+        const fbCanvas = new fabric.Canvas('main-canvas', {
+            backgroundColor: '#000',
+            enableRetinaScaling: false //레티나 비활성화
+        })
+        fbCanvas.viewportTransform = fabric.util.composeMatrix({ translateX: 256, translateY: 256 })
+
+        document.addEventListener('keydown', (evt) => {
+            console.log(evt)
+            switch (evt.key) {
+                case 'q': //정점 정보 리스팅
+                    console.log(polygon.points)
+                    break;
+            }
+        })
+
+        var points = [{
+            x: -128, y: 0
+        }, {
+            x: 0, y: -128
+        }, 
+        {
+            x: -32, y: -64
+        },
+        {
+            x: 128, y: 0
+        }]
+
+        var polygon = new fabric.Polygon(points, {
+            fill: 'transparent',
+            strokeWidth: 2,
+            stroke: '#ffff00',
+            objectCaching: false,
+            transparentCorners: false,
+            cornerColor: 'blue',
+
+        });
+
+        fabric.util.applyTransformToObject(polygon, fabric.util.composeMatrix({ translateX: 0, translateY: 0 }));
+
+        fbCanvas.add(polygon)
+
+        console.log(fbCanvas.getObjects());
+
+        fbCanvas.on('after:render', (evt) => {
+            //let ctx = this.fbCanvas.contextContainer
+            let ctx = evt.ctx
+            if (ctx) {
+                ctx.strokeStyle = '#0f0';
+                ctx.beginPath();
+                ctx.moveTo(0, 256);
+                ctx.lineTo(512, 256);
+                ctx.closePath()
+                ctx.stroke()
+
+                ctx.beginPath();
+                ctx.moveTo(256, 0);
+                ctx.lineTo(256, 512);
+                ctx.closePath()
+                ctx.stroke()
+            }
+
+        });
+
+        fbCanvas.on('mouse:down', (evt) => {
+
+            //check pt in polygon
+            if (pointInPolygon(makeAbsolutePoints(polygon), evt.absolutePointer)) {
+                polygon.fill = '#ff000055'
+            }
+            else {
+                polygon.fill = 'transparent'
+            }
+            fbCanvas.requestRenderAll();
+
+        })
+    </script>
+
+
+
+
+</body>
+
+</html>

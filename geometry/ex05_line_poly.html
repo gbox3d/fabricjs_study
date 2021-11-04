@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title> fabrics geometry intersect line polygon </title>
+    <script src="../node_modules/fabric/dist/fabric.js"></script>
+
+    <style>
+        .hide {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="main-canvas" width="512" height="512"></canvas>
+
+    <script type="module">
+
+        import { makeAbsolutePoints } from './utils.js'
+
+        //절대 좌표 구하기 
+        /*function convertAbsolutePoint(area) {
+            return area.points
+                .map(p => fabric.util.transformPoint({ x: p.x - area.pathOffset.x, y: p.y - area.pathOffset.y }, area.calcTransformMatrix()));
+        }*/
+
+        const fbCanvas = new fabric.Canvas('main-canvas', {
+            backgroundColor: '#000',
+            enableRetinaScaling: false //레티나 비활성화
+        })
+        fbCanvas.viewportTransform = fabric.util.composeMatrix({ translateX: 256, translateY: 256 })
+
+        document.addEventListener('keydown', (evt) => {
+            console.log(evt)
+            switch (evt.key) {
+                case 'q': //정점 정보 리스팅
+                    console.log(line1)
+
+                    //교차점 구하기 
+                    {
+
+                        let _offset = { x: (line1.x1 + line1.x2) / 2, y: (line1.y1 + line1.y2) / 2 }
+
+
+                        let intersect = fabric.Intersection.intersectLinePolygon(
+                            fabric.util.transformPoint(new fabric.Point(line1.x1 - _offset.x, line1.y1 - _offset.y), line1.calcTransformMatrix()),
+                            fabric.util.transformPoint(new fabric.Point(line1.x2 - _offset.x, line1.y2 - _offset.y), line1.calcTransformMatrix()),
+                            makeAbsolutePoints(polygon)
+                        );
+
+                        console.log(intersect)
+                        if (intersect.status === "Intersection") {
+                            intersect.points.forEach(pt => {
+                                let _tr = fabric.util.composeMatrix({ translateX: pt.x, translateY: pt.y })
+                                let circle = new fabric.Circle({
+                                    radius: 4, fill: 'red'
+                                });
+                                fabric.util.applyTransformToObject(circle, _tr)
+                                circle.setCoords()
+                                fbCanvas.add(circle)
+                                //circles.push(circle)
+                            })
+                        }
+                    }
+
+                    break;
+            }
+        })
+
+        var points = [{
+            x: -64, y: 0
+        }, {
+            x: 0, y: -64
+        },
+        {
+            x: 64, y: 0
+        }]
+
+        var polygon = new fabric.Polygon(points, {
+            left: 0,
+            top: 0,
+            fill: 'transparent',
+            strokeWidth: 2,
+            stroke: '#ffff00',
+            //scaleX: 4,
+            //scaleY: 4,
+            objectCaching: false,
+            transparentCorners: false,
+            cornerColor: 'blue',
+        });
+        fabric.util.applyTransformToObject(polygon, fabric.util.composeMatrix({}))
+        fbCanvas.add(polygon)
+
+        var line1 = new fabric.Line([0, 0, 200, 200], { stroke: 'blue', strokeWidth: 2 })
+        fabric.util.applyTransformToObject(line1, fabric.util.composeMatrix({}))
+        fbCanvas.add(line1)
+
+        fbCanvas.on('after:render', (evt) => {
+            let ctx = evt.ctx
+            if (ctx) {
+                ctx.strokeStyle = '#0f0';
+                ctx.beginPath();
+                ctx.moveTo(0, 256);
+                ctx.lineTo(512, 256);
+                ctx.closePath()
+                ctx.stroke()
+
+                ctx.beginPath();
+                ctx.moveTo(256, 0);
+                ctx.lineTo(256, 512);
+                ctx.closePath()
+                ctx.stroke()
+
+
+
+                {
+
+                    let _offset = { x: (line1.x1 + line1.x2) / 2, y: (line1.y1 + line1.y2) / 2 }
+
+
+                    let intersect = fabric.Intersection.intersectLinePolygon(
+                        fabric.util.transformPoint(new fabric.Point(line1.x1 - _offset.x, line1.y1 - _offset.y), line1.calcTransformMatrix()),
+                        fabric.util.transformPoint(new fabric.Point(line1.x2 - _offset.x, line1.y2 - _offset.y), line1.calcTransformMatrix()),
+                        makeAbsolutePoints(polygon)
+                    );
+
+                    //console.log(intersect)
+                    if (intersect.status === "Intersection") {
+                        intersect.points.forEach(pt => {
+
+                            let _pt = fabric.util.transformPoint(pt, fbCanvas.viewportTransform)
+
+
+                            ctx.strokeStyle = '#f00';
+                            ctx.beginPath();
+                            ctx.arc(_pt.x, _pt.y, 8, 0, 2 * Math.PI);
+                            ctx.closePath()
+                            ctx.stroke();
+
+                            /*let _tr = fabric.util.composeMatrix({ translateX: pt.x, translateY: pt.y })
+                            let circle = new fabric.Circle({
+                                radius: 4, fill: 'red'
+                            });
+                            fabric.util.applyTransformToObject(circle, _tr)
+                            circle.setCoords()
+                            fbCanvas.add(circle)
+                            //circles.push(circle)
+                            */
+                        })
+                    }
+                }
+            }
+
+        })
+
+        //console.log(fbCanvas.getObjects())
+
+
+    </script>
+
+
+
+
+</body>
+
+</html>
