@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>font example</title>
+  <!-- <script src="../libs/fabric.js" ></script> -->
+  <script src="../../node_modules/fabric/dist/fabric.js"></script>
+  <script src="../../node_modules/fontfaceobserver/fontfaceobserver.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    @font-face {
+      font-family: 'digital-7';
+      src: url('./font/DS-DIGI.TTF');
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <canvas id="main-canvas" width="256" height="256"></canvas>
+
+  <script>
+
+    /*
+    
+    커스템 폰트를 로딩하기 위해서는 fontfaceobserver를 사용해야 한다.
+    npm install fontfaceobserver --save 로 설치한다.
+
+    */
+
+    function loadAndUse(font) {
+      var myfont = new FontFaceObserver(font)
+      myfont.load()
+        .then(function () {
+          // when font is loaded, use it.
+          //fbCanvas.getActiveObject().set("fontFamily", font);
+          //fbCanvas.requestRenderAll();
+          console.log(`font loaded : ${font}`);
+
+          var text = new fabric.Text('2021 Hello',
+            {
+              left: 0,
+              top: 0,
+              fontFamily: 'digital-7',
+              fill : '#ff0',
+              
+            });
+          // "add" rectangle onto canvas
+          fbCanvas.add(text);
+        }).catch(function (e) {
+          console.log(e)
+          alert('font loading failed ' + font);
+        });
+    }
+
+    var fbCanvas = new fabric.Canvas('main-canvas', {
+      backgroundColor: '#a278ff'
+    })
+
+    loadAndUse('digital-7')
+
+
+
+
+  </script>
+
+
+
+
+</body>
+
+</html>
