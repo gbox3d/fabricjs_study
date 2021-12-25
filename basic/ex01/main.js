@@ -1,5 +1,5 @@
 // import { fabric } from "fabric"; //es6 방식
-import { fabric } from "../../libs/fabric_util.js";
+const fabric = window.fabric;
 
 function main () {
     
