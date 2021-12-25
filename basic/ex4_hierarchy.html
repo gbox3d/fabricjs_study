@@ -50,7 +50,7 @@
     function addChild(parent, child) {
 
       child.relationMatrix = fabric.util.multiplyTransformMatrices(
-        fabric.util.invertTransform(root.calcTransformMatrix()),
+        fabric.util.invertTransform(parent.calcTransformMatrix()),
         child.calcTransformMatrix()
       );
       child.parent = parent
