@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>fabricjs blur filter</title>
+    <script src="../../../node_modules/fabric/dist/fabric.js" ></script>
+</head>
+
+<body>
+
+
+    <button id='set' >set</button>
+    <button id='clear' >clear</button>
+    <div id='change'>
+        <input value="0.5" /><button>change</button>
+    </div>
+    
+
+    <canvas id="main-canvas"></canvas>
+
+
+
+    <script type="module">
+        import main from './main.js';
+        document.addEventListener('DOMContentLoaded', main);
+
+    </script>
+</body>
+
+</html>
