@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title> fabrics geometry </title>
+    <title> fabrics geometry hierychy </title>
     <script src="../node_modules/fabric/dist/fabric.js"></script>
 
     <style>
@@ -18,6 +18,10 @@
     <canvas id="main-canvas" width="512" height="512"></canvas>
 
     <script type="module">
+
+        /*
+        이미지 오브잭트에 자식으로 올리곤을 추가시켜서 이미지를 움직이면 같이 따라서 움직이도록 만든 예제이다.
+        */
 
         const fbCanvas = new fabric.Canvas('main-canvas', {
             backgroundColor: '#000',

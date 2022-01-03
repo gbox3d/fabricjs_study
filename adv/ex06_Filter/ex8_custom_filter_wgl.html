@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title> custom filter 2 </title>
-  <script src="../libs/fabric.js" ></script>
+  <script src="../../node_modules/fabric/dist/fabric.js" ></script>
+  <!-- <script src="../../libs/fabric.js" ></script> -->
 </head>
 <body>
 
@@ -102,7 +103,7 @@
           'void main() {\n' +
           'vec4 color = texture2D(uTexture, vTexCoord);\n' +
           'vec4 color2 = texture2D(uImage, vTexCoord2);\n' +
-          'color.a = color2.r;\n' +
+          'color = gl_FragColor;\n' +
           'gl_FragColor = color;\n' +
           '}',
       },
@@ -250,11 +251,13 @@
         callback(new fabric.Image.filters.BlendImage(options));
       });
     };
-  })(typeof exports !== 'undefined' ? exports : this);
+  })({
+    "fabric": fabric
+  });
 
 
 
-  fabric.Image.fromURL('../res/oota_nao.jpg',((object) =>{
+  fabric.Image.fromURL('../../res/oota_nao.jpg',((object) =>{
 
     console.log(object);
     testObj = object
@@ -266,7 +269,7 @@
 
 
     let alphaMixFilter
-    fabric.Image.fromURL('../res/blur_pat01.png',( function(_img) {
+    fabric.Image.fromURL('../../res/blur_pat01.png',( function(_img) {
 
         alphaMixFilter = new fabric.Image.filters.AlphaMixer({
           image: _img,
