@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>fabricjs basic</title>
+    <script src="../node_modules/fabric/dist/fabric.js"></script>
+</head>
+
+<body>
+
+    <p>
+        sample 을 선택하려면 콘솔창열고 select_sample(샘플이름) 함수를 실행하세요.
+    </p>
+
+    <canvas id="main-canvas"></canvas>
+
+    <script type="module">
+
+        //import ex01 from './ex01/main.js';
+
+        const sample_name = localStorage.getItem('sample_name') ? localStorage.getItem('sample_name') : 'ex01';
+
+        function select_sample(sample_name) {
+            localStorage.setItem('sample_name', sample_name);
+            location.reload();
+
+        }
+
+        globalThis.select_sample = select_sample;
+
+
+        document.addEventListener('DOMContentLoaded', async function () {
+
+            /*
+            const main = new Promise(function(resolve, reject) {
+                const script = document.createElement('script');
+                script.src = `./${sample_name}/main.js`;
+                script.onload = resolve;
+                document.body.appendChild(script);
+            });
+            */
+            const main = await new Promise(function (resolve, reject) {
+                import(`./${sample_name}/main.js`).then((_module) => {
+                    resolve(_module.default);
+                });
+            });
+
+            main();
+        });
+
+        
+
+    </script>
+
+
+
+
+</body>
+
+</html>
