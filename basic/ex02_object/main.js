@@ -54,16 +54,16 @@ function main() {
             case 'KeyQ':
                 triangle.set('angle', triangle.get('angle') - 5);
                 break;
-            case 'KeyX':
+            case 'KeyX': //삭제 
                 fbCanvas.remove(rect);
                 break;
-            case 'KeyZ':
+            case 'KeyZ': //추가 
                 fbCanvas.add(rect);
                 break;
-            case 'KeyC':
+            case 'KeyC': //오브잭트 선택하기 
                 fbCanvas.setActiveObject(rect);
                 break;
-            case 'KeyV':
+            case 'KeyV': //선택해제 
                 fbCanvas.discardActiveObject();
                 break;
         }
