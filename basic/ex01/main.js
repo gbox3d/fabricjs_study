@@ -5,6 +5,7 @@ function main () {
     
     const fbCanvas = new fabric.Canvas('main-canvas', {
         backgroundColor: '#a278ff',
+        preserveObjectStacking : true, //선택한 오브잭트 현재 z 순서  유지
         enableRetinaScaling: false //레티나 비활성화
     })
     fbCanvas.setHeight(640);
