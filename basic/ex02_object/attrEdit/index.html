@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>fabricjs basic</title>
+    <!-- <script src="../../node_modules/fabric/dist/fabric.js" ></script> -->
+    <script src="https://unpkg.com/fabric@5.2.1/dist/fabric.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+
+    <link rel="stylesheet" href="./main.css">
+
+</head>
+
+<body>
+
+    <div id="container">
+
+        <canvas id="main-canvas"></canvas>
+
+        <div id="objView">
+            <form class="box" id="attrFrom">
+                
+                <div>
+                    <label for="objId">object id</label>
+                    <input name="objId" />
+                </div>
+                <div>
+                    <label>left</label> <input name="left" />
+                    <label>top</label> <input name="top" />
+                    <label>radius</label> <input name="radius" />
+                </div>
+                <div>
+                    <label>fill</label> <input name="fill" />
+                </div>
+
+            </form>
+
+            <div class="box" >
+                <button class="edit">Edit</button>
+                <button class="add">add</button>
+                <button class="insert">insert At</button>
+                <button class="remove">remove</button>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script type="module">
+        import main from './main.js';
+        document.addEventListener('DOMContentLoaded', () => {
+            globalThis.main = new main();
+        });
+
+    </script>
+
+
+
+
+</body>
+
+</html>

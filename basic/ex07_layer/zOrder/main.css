@@ -1,0 +1,14 @@
+#container {
+    display: flex;
+}
+
+#objList .select {
+    background-color: gray;
+}
+
+#objList {
+    margin: 0px;
+    width: 200px;
+    height: 480px;
+    overflow: scroll;
+}

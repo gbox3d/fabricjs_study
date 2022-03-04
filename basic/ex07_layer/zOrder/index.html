@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>fabricjs basic</title>
+    <!-- <script src="../../node_modules/fabric/dist/fabric.js" ></script> -->
+    <script src="https://unpkg.com/fabric@5.2.1/dist/fabric.js" ></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+    
+    <link rel="stylesheet" href="./main.css">
+
+</head>
+
+<body>
+
+    <div id="container">
+
+        <canvas id="main-canvas"></canvas>
+
+        <div id="objView" >
+
+            <ul id="objList">
+            
+            </ul>
+            <button class="up" >up</button>
+            <button class="down" >down</button>
+            <button class="insert" >insert At</button>
+            <button class="front">front</button>
+            <button class="bottom">bottom</button>
+
+        </div>
+        
+
+    </div>
+    
+
+    <script type="module">
+        import main from './main.js';
+        document.addEventListener('DOMContentLoaded', ()=> {
+            globalThis.main = new main();
+        });
+
+    </script>
+
+
+
+
+</body>
+
+</html>
